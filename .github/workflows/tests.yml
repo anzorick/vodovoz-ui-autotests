@@ -28,19 +28,6 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'          # кэшируем ~/.m2/repository между запусками
 
-      # 3. Установить Google Chrome (последняя стабильная версия)
-      #    ubuntu-latest содержит Chrome по умолчанию, но явная установка
-      #    гарантирует актуальную версию и совместимость с ChromeDriver
-      - name: Install Google Chrome
-        run: |
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub \
-            | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
-          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] \
-            http://dl.google.com/linux/chrome/deb/ stable main" \
-            | sudo tee /etc/apt/sources.list.d/google-chrome.list
-          sudo apt-get update -q
-          sudo apt-get install -y google-chrome-stable
-          google-chrome --version
 
       # 4. Запустить тесты в headless-режиме
       #    -Dheadless=true   → ChromeOptions получит --headless=new
