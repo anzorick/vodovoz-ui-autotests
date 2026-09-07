@@ -1,70 +1,64 @@
 name: UI Tests (Selenide + Allure)
 
-# ─── Триггеры ─────────────────────────────────────────────────────────────────
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
-  # Позволяет запустить вручную из вкладки Actions на GitHub
+    branches: [ main ]
   workflow_dispatch:
 
-# ─── Задачи ───────────────────────────────────────────────────────────────────
+permissions:
+  contents: write
+
 jobs:
   test:
-    name: Run Selenide Tests (headless Chrome)
+    name: Run Selenide Tests (Headless Chrome)
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Клонировать репозиторий
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Установить Java 17 (Eclipse Temurin) с кэшированием Maven
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
           distribution: 'temurin'
-          cache: 'maven'          # кэшируем ~/.m2/repository между запусками
+          java-version: '17'
+          cache: 'maven'
 
-
-      # 4. Запустить тесты в headless-режиме
-      #    -Dheadless=true   → ChromeOptions получит --headless=new
-      #    WebDriverManager автоматически скачает совместимый ChromeDriver
       - name: Run tests
-        run: mvn clean test -Dheadless=true -Dbrowser=chrome
-        # Не прерываем pipeline при падении тестов — хотим дождаться отчёта
-        continue-on-error: true
+        run: mvn clean test -Dheadless=true
+        continue-on-error: true # чтобы отчет собирался даже при падении тестов
 
-      # 5. Загрузить сырые результаты Allure (нужны для генерации отчёта)
-      - name: Upload allure-results (raw)
-        if: always()              # загружаем даже если тесты упали
+      - name: Get Allure history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        id: allure-report
+        with:
+          allure_results: target/allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+
+      - name: Upload allure-results (raw artifact)
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: allure-results
-          path: target/allure-results/
-          retention-days: 14      # хранить 14 дней
-
-      # 6. Сгенерировать HTML-отчёт Allure
-      - name: Generate Allure report
-        if: always()
-        run: mvn allure:report
-
-      # 7. Загрузить готовый HTML-отчёт как артефакт
-      - name: Upload allure-report (HTML)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: target/site/allure-maven-plugin/
-          retention-days: 14
-
-      # 8. Загрузить скриншоты при падении тестов (опционально)
-      - name: Upload screenshots on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: screenshots
-          path: screenshots/
-          retention-days: 7
+          path: target/allure-results
