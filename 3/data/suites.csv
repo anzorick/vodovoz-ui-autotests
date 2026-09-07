@@ -1,12 +1,4 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"Invalid credentials should show an error message","20517","Login fails with invalid credentials","","2026-09-07","failed","2026-09-07","","Login Page Tests","com.automation.tests.LoginTest","testLoginWithInvalidCredentials"
-"Параметризованный тест с @CsvSource.
-Для каждого запроса проверяем:
-1. Страница каталога открылась (/catalog/ в URL)
-2. Количество товаров ≥ указанного минимума
-3. Хотя бы один товар содержит поисковое слово в названии
-","20863","Параметризованный поиск по различным запросам Прогон 1: Поиск по запросу 'вода', ожидаем не менее 5 товаров","","2026-09-07","passed","2026-09-07","","Поиск на vodovoz.ru","com.automation.tests.VodovozSearchTest","testParametrizedSearch"
-"User logs in with valid credentials and is redirected to the dashboard","21903","Login succeeds with valid credentials","","2026-09-07","failed","2026-09-07","","Login Page Tests","com.automation.tests.LoginTest","testSuccessfulLogin"
 "E2E-сценарий:
 1. Открыть главную страницу vodovoz.ru
 2. Ввести в строку поиска: вода питьевая
@@ -17,22 +9,8 @@
 7. Открыть страницу корзины /basket/
 8. Проверить, что корзина не пуста
 9. Проверить, что добавленный товар присутствует в корзине
-","24771","E2E: Поиск 'вода питьевая' → В корзину → Корзина содержит товар","","2026-09-07","passed","2026-09-07","","E2E: Поиск → Корзина","com.automation.tests.AddToCartTest","testSearchAndAddToCart"
-"Параметризованный тест с @CsvSource.
-Для каждого запроса проверяем:
-1. Страница каталога открылась (/catalog/ в URL)
-2. Количество товаров ≥ указанного минимума
-3. Хотя бы один товар содержит поисковое слово в названии
-","18359","Параметризованный поиск по различным запросам Прогон 2: Поиск по запросу 'кулер', ожидаем не менее 1 товаров","","2026-09-07","passed","2026-09-07","","Поиск на vodovoz.ru","com.automation.tests.VodovozSearchTest","testParametrizedSearch"
-"E2E-сценарий (гостевой режим):
-1. Открыть главную vodovoz.ru
-2. Поиск «кулер»
-3. Запомнить название первого товара
-4. Нажать «В избранное» (кнопка-сердечко)
-5. Перейти на страницу /personal/favorite/
-6. Если редирект на логин — тест фиксирует это как ожидаемое поведение
-7. Если страница избранного открылась — проверяем наличие товара
-","26684","Поиск 'кулер' → В избранное → Проверка страницы избранного","","2026-09-07","passed","2026-09-07","","Добавление товара в избранное","com.automation.tests.AddToFavoritesTest","testAddToFavoritesAsGuest"
+","23045","E2E: Поиск 'вода питьевая' → В корзину → Корзина содержит товар","","2026-09-07","passed","2026-09-07","","E2E: Поиск → Корзина","com.automation.tests.AddToCartTest","testSearchAndAddToCart"
+"User logs in with valid credentials and is redirected to the dashboard","19433","Login succeeds with valid credentials","","2026-09-07","failed","2026-09-07","","Login Page Tests","com.automation.tests.LoginTest","testSuccessfulLogin"
 "Шаги:
 1. Открыть главную страницу vodovoz.ru
 2. Ввести в строку поиска: кулер
@@ -40,9 +18,7 @@
 4. Проверить, что открылась страница каталога (/catalog/)
 5. Проверить, что URL содержит параметр поиска q=
 6. Проверить, что найден хотя бы 1 товар
-","21514","Поиск 'кулер' возвращает страницу каталога с результатами","","2026-09-07","passed","2026-09-07","","Поиск на vodovoz.ru","com.automation.tests.VodovozSearchTest","testSearchForCoolerReturnsResults"
-"","21619","Login fails with various invalid credential combinations username='invalid' / password='invalid'","","2026-09-07","failed","2026-09-07","","Login Page Tests","com.automation.tests.LoginTest","testLoginWithInvalidCredentialsParametrized"
-"","20290","Login fails with various invalid credential combinations username='user@test.com' / password=''","","2026-09-07","failed","2026-09-07","","Login Page Tests","com.automation.tests.LoginTest","testLoginWithInvalidCredentialsParametrized"
+","18925","Поиск 'кулер' возвращает страницу каталога с результатами","","2026-09-07","passed","2026-09-07","","Поиск на vodovoz.ru","com.automation.tests.VodovozSearchTest","testSearchForCoolerReturnsResults"
 "Шаги:
 1. Открыть главную страницу vodovoz.ru
 2. Ввести в строку поиска: вода
@@ -50,20 +26,15 @@
 4. Проверить, что URL содержит параметр q=
 5. Проверить, что найдено не менее 5 товаров
 6. Проверить, что хотя бы один товар содержит 'вода' в названии
-","22429","Поиск 'вода' возвращает товары с водой","","2026-09-07","passed","2026-09-07","","Поиск на vodovoz.ru","com.automation.tests.VodovozSearchTest","testSearchForWaterReturnsProducts"
-"","20639","Login fails with various invalid credential combinations username='' / password='password123'","","2026-09-07","failed","2026-09-07","","Login Page Tests","com.automation.tests.LoginTest","testLoginWithInvalidCredentialsParametrized"
+","19230","Поиск 'вода' возвращает товары с водой","","2026-09-07","passed","2026-09-07","","Поиск на vodovoz.ru","com.automation.tests.VodovozSearchTest","testSearchForWaterReturnsProducts"
+"Invalid credentials should show an error message","19323","Login fails with invalid credentials","","2026-09-07","failed","2026-09-07","","Login Page Tests","com.automation.tests.LoginTest","testLoginWithInvalidCredentials"
 "Параметризованный тест с @CsvSource.
 Для каждого запроса проверяем:
 1. Страница каталога открылась (/catalog/ в URL)
 2. Количество товаров ≥ указанного минимума
 3. Хотя бы один товар содержит поисковое слово в названии
-","17515","Параметризованный поиск по различным запросам Прогон 4: Поиск по запросу 'лимонад', ожидаем не менее 2 товаров","","2026-09-07","passed","2026-09-07","","Поиск на vodovoz.ru","com.automation.tests.VodovozSearchTest","testParametrizedSearch"
-"Параметризованный тест с @CsvSource.
-Для каждого запроса проверяем:
-1. Страница каталога открылась (/catalog/ в URL)
-2. Количество товаров ≥ указанного минимума
-3. Хотя бы один товар содержит поисковое слово в названии
-","19013","Параметризованный поиск по различным запросам Прогон 3: Поиск по запросу 'помпа', ожидаем не менее 3 товаров","","2026-09-07","passed","2026-09-07","","Поиск на vodovoz.ru","com.automation.tests.VodovozSearchTest","testParametrizedSearch"
+","16599","Параметризованный поиск по различным запросам Прогон 3: Поиск по запросу 'помпа', ожидаем не менее 3 товаров","","2026-09-07","passed","2026-09-07","","Поиск на vodovoz.ru","com.automation.tests.VodovozSearchTest","testParametrizedSearch"
+"","19473","Login fails with various invalid credential combinations username='user@test.com' / password=''","","2026-09-07","failed","2026-09-07","","Login Page Tests","com.automation.tests.LoginTest","testLoginWithInvalidCredentialsParametrized"
 "Негативный E2E-сценарий:
 1. Открыть главную страницу vodovoz.ru
 2. Нажать кнопку «Войти» в шапке сайта
@@ -74,4 +45,33 @@
 7. Принять условия обработки персональных данных
 8. Нажать кнопку «Войти»
 9. Проверить, что отображается сообщение об ошибке авторизации
-","36150","Вход с неверным Email → проверка сообщения об ошибке","","2026-09-07","passed","2026-09-07","","Авторизация по Email","com.automation.tests.LoginByEmailTest","testLoginWithInvalidEmailShowsError"
+","32070","Вход с неверным Email → проверка сообщения об ошибке","","2026-09-07","failed","2026-09-07","","Авторизация по Email","com.automation.tests.LoginByEmailTest","testLoginWithInvalidEmailShowsError"
+"Параметризованный тест с @CsvSource.
+Для каждого запроса проверяем:
+1. Страница каталога открылась (/catalog/ в URL)
+2. Количество товаров ≥ указанного минимума
+3. Хотя бы один товар содержит поисковое слово в названии
+","18254","Параметризованный поиск по различным запросам Прогон 2: Поиск по запросу 'кулер', ожидаем не менее 1 товаров","","2026-09-07","passed","2026-09-07","","Поиск на vodovoz.ru","com.automation.tests.VodovozSearchTest","testParametrizedSearch"
+"","20559","Login fails with various invalid credential combinations username='' / password='password123'","","2026-09-07","failed","2026-09-07","","Login Page Tests","com.automation.tests.LoginTest","testLoginWithInvalidCredentialsParametrized"
+"","20846","Login fails with various invalid credential combinations username='invalid' / password='invalid'","","2026-09-07","failed","2026-09-07","","Login Page Tests","com.automation.tests.LoginTest","testLoginWithInvalidCredentialsParametrized"
+"Параметризованный тест с @CsvSource.
+Для каждого запроса проверяем:
+1. Страница каталога открылась (/catalog/ в URL)
+2. Количество товаров ≥ указанного минимума
+3. Хотя бы один товар содержит поисковое слово в названии
+","16211","Параметризованный поиск по различным запросам Прогон 1: Поиск по запросу 'вода', ожидаем не менее 5 товаров","","2026-09-07","passed","2026-09-07","","Поиск на vodovoz.ru","com.automation.tests.VodovozSearchTest","testParametrizedSearch"
+"E2E-сценарий (гостевой режим):
+1. Открыть главную vodovoz.ru
+2. Поиск «кулер»
+3. Запомнить название первого товара
+4. Нажать «В избранное» (кнопка-сердечко)
+5. Перейти на страницу /personal/favorite/
+6. Если редирект на логин — тест фиксирует это как ожидаемое поведение
+7. Если страница избранного открылась — проверяем наличие товара
+","24644","Поиск 'кулер' → В избранное → Проверка страницы избранного","","2026-09-07","passed","2026-09-07","","Добавление товара в избранное","com.automation.tests.AddToFavoritesTest","testAddToFavoritesAsGuest"
+"Параметризованный тест с @CsvSource.
+Для каждого запроса проверяем:
+1. Страница каталога открылась (/catalog/ в URL)
+2. Количество товаров ≥ указанного минимума
+3. Хотя бы один товар содержит поисковое слово в названии
+","18024","Параметризованный поиск по различным запросам Прогон 4: Поиск по запросу 'лимонад', ожидаем не менее 2 товаров","","2026-09-07","passed","2026-09-07","","Поиск на vodovoz.ru","com.automation.tests.VodovozSearchTest","testParametrizedSearch"
