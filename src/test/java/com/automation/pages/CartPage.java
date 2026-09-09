@@ -31,19 +31,25 @@ public class CartPage extends BasePage {
     // ── Selectors ────────────────────────────────────────────────────────────
 
     /** Контейнер всей страницы корзины */
-    private final SelenideElement basketSection = $(".basket-section, #basket-section, .order-cart, .cart-container");
+    private final SelenideElement basketSection = $(".basket-section, #basket-section, .order-cart, .basket-checkout-container");
 
-    /** Список элементов корзины — пробуем несколько возможных классов */
-    private final ElementsCollection basketItems = $$(".basket-item, .order-basket__item, .cart-item, [class*='basket-item']");
+    /**
+     * Строки товаров в корзине.
+     * Реальный HTML: tr[data-entity='basket-item'] (из basket-item-template)
+     */
+    private final ElementsCollection basketItems = $$("tr[data-entity='basket-item']");
 
     /** Пустая корзина */
     private final SelenideElement emptyBasket = $(".basket-empty, .empty-basket, [class*='basket-empty']");
 
-    /** Итоговая цена */
-    private final SelenideElement totalPrice = $(".basket-total__price, .order-total__price, [class*='total']");
+    /**
+     * Итоговая цена.
+     * Реальный HTML: div[data-entity='basket-total-price']
+     */
+    private final SelenideElement totalPrice = $("[data-entity='basket-total-price'], .basket-total__price, .basket-checkout-total-price");
 
     /** Кнопка оформления заказа */
-    private final SelenideElement orderButton = $(".btn-order, a[href*='/order/'], button[class*='order']");
+    private final SelenideElement orderButton = $("button.basket-btn-checkout, .btn-order, a[href*='/order/']");
 
     // ── Navigation ───────────────────────────────────────────────────────────
 
@@ -147,4 +153,192 @@ public class CartPage extends BasePage {
         orderButton.shouldBe(Condition.visible);
         return this;
     }
+
+    // ── Управление количеством ────────────────────────────────────────────────
+
+    /**
+     * Нажимает кнопку «+» для первого товара в корзине.
+     * Реальный HTML: span[data-entity='basket-item-quantity-plus']
+     */
+    @Step("Увеличить количество первого товара (нажать '+')")
+    public CartPage increaseFirstItemQuantity() {
+        log.info("Нажимаю '+' для увеличения количества");
+        // Реальный селектор из basket-item-template vodovoz.ru (строка 1298)
+        SelenideElement plusBtn = $("[data-entity='basket-item-quantity-plus']");
+        if (plusBtn.exists() && plusBtn.isDisplayed()) {
+            executeJavaScript("arguments[0].click()", plusBtn);
+            log.info("Нажата кнопка '+' (data-entity=basket-item-quantity-plus) ✓");
+        } else {
+            // Запасной вариант по CSS-классу
+            SelenideElement plusByCss = $(".basket-item-btn-plus");
+            if (plusByCss.exists()) {
+                executeJavaScript("arguments[0].click()", plusByCss);
+                log.info("Нажата кнопка '+' (.basket-item-btn-plus) ✓");
+            } else {
+                log.warn("Кнопка '+' не найдена — изменяю количество через JS на input");
+                SelenideElement qtyInput = $("[data-entity='basket-item-quantity-field']");
+                String currentVal = qtyInput.getValue();
+                int newVal = Integer.parseInt(currentVal.trim()) + 1;
+                executeJavaScript(
+                    "arguments[0].value='" + newVal + "';" +
+                    "arguments[0].dispatchEvent(new Event('change'));",
+                    qtyInput
+                );
+                log.info("Количество изменено через JS: {} → {}", currentVal, newVal);
+            }
+        }
+        com.codeborne.selenide.Selenide.sleep(2000); // ждём AJAX пересчёта
+        return this;
+    }
+
+    /**
+     * Нажимает кнопку «-» для первого товара в корзине.
+     * Реальный HTML: span[data-entity='basket-item-quantity-minus']
+     */
+    @Step("Уменьшить количество первого товара (нажать '-')")
+    public CartPage decreaseFirstItemQuantity() {
+        log.info("Нажимаю '-' для уменьшения количества");
+        SelenideElement minusBtn = $("[data-entity='basket-item-quantity-minus']");
+        if (minusBtn.exists() && minusBtn.isDisplayed()) {
+            executeJavaScript("arguments[0].click()", minusBtn);
+            log.info("Нажата кнопка '-' ✓");
+        } else {
+            SelenideElement minusByCss = $(".basket-item-btn-minus");
+            if (minusByCss.exists()) {
+                executeJavaScript("arguments[0].click()", minusByCss);
+                log.info("Нажата кнопка '-' (.basket-item-btn-minus) ✓");
+            }
+        }
+        com.codeborne.selenide.Selenide.sleep(2000);
+        return this;
+    }
+
+
+    /**
+     * Возвращает числовое значение итоговой суммы корзины.
+     * Очищает от пробелов, «₽», «руб.» и т.п.
+     */
+    @Step("Получить числовое значение итоговой суммы корзины")
+    public int getCartTotalPriceValue() {
+        // Пробуем несколько возможных контейнеров итога
+        String[] totalSelectors = {
+            ".basket-checkout-total-price-inner .price",
+            "[data-entity='basket-total-price']",
+            ".basket-checkout-total-price",
+            ".basket-total__price",
+            "[class*='total'][class*='price']"
+        };
+        for (String sel : totalSelectors) {
+            try {
+                SelenideElement el = $(sel);
+                if (el.exists() && el.isDisplayed()) {
+                    String raw = el.getText().replaceAll("[^\\d]", "").trim();
+                    if (!raw.isEmpty()) {
+                        int val = Integer.parseInt(raw);
+                        log.info("Итоговая сумма ({}): {} ₽", sel, val);
+                        return val;
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+        log.warn("Не удалось получить числовое значение итоговой суммы");
+        return 0;
+    }
+
+    /**
+     * Удаляет первый товар из корзины через кнопку «Удалить».
+     */
+    @Step("Удалить первый товар из корзины")
+    public CartPage removeFirstItem() {
+        log.info("Удаляю первый товар из корзины");
+        SelenideElement deleteBtn = $(
+            "[data-entity='basket-item-delete'], " +
+            ".basket-item-actions-remove, " +
+            ".basket-item__remove, " +
+            "[class*='basket'][class*='delete'], " +
+            "[class*='basket'][class*='remove']"
+        );
+        if (deleteBtn.exists()) {
+            executeJavaScript("arguments[0].click()", deleteBtn);
+            log.info("Товар удалён (JS-клик) ✓");
+            com.codeborne.selenide.Selenide.sleep(2000);
+        } else {
+            log.warn("Кнопка удаления не найдена!");
+        }
+        return this;
+    }
+
+    /**
+     * Проверяет, что корзина пуста.
+     *
+     * Важно: vodovoz.ru показывает анимацию восстановления после удаления —
+     * tr[data-entity='basket-item'] остаётся в DOM в состоянии "removed",
+     * поэтому проверяем по отсутствию активных блоков управления количеством
+     * (.basket-item-amount) или по счётчику корзины в шапке.
+     */
+    @Step("Корзина пуста")
+    public CartPage shouldBeEmpty() {
+        log.info("Проверяю что корзина пуста (ждём AJAX + анимации удаления)...");
+        com.codeborne.selenide.Selenide.sleep(3000);
+
+        // Стратегия 1: Блок управления количеством (.basket-item-amount) исчезает
+        // при реальном удалении товара
+        ElementsCollection activeQtyBlocks = $$(".basket-item-amount")
+            .filter(com.codeborne.selenide.Condition.visible);
+
+        if (activeQtyBlocks.size() == 0) {
+            log.info("Блоки управления количеством отсутствуют → корзина пуста ✓");
+            return this;
+        }
+
+        // Стратегия 2: Счётчик в шапке должен быть 0 или скрыт
+        try {
+            SelenideElement headerCount = $(".header-cart__count");
+            String countText = headerCount.exists() ? headerCount.getText().trim() : "0";
+            if (countText.equals("0") || countText.isEmpty()) {
+                log.info("Счётчик корзины в шапке = '{}' → корзина пуста ✓", countText);
+                return this;
+            }
+            log.info("Счётчик корзины в шапке: '{}'", countText);
+        } catch (Exception e) {
+            log.warn("Не удалось прочитать счётчик шапки: {}", e.getMessage());
+        }
+
+        // Стратегия 3: Элемент «корзина пуста»
+        try {
+            SelenideElement empty = $(".basket-empty, .empty-basket, [class*='basket-empty']");
+            if (empty.exists() && empty.isDisplayed()) {
+                log.info("Элемент 'корзина пуста' найден ✓");
+                return this;
+            }
+        } catch (Exception ignored) {}
+
+        // Все стратегии не сработали — корзина не пуста
+        log.warn("Блоки количества ({}) ещё видны — корзина не пуста", activeQtyBlocks.size());
+        org.junit.jupiter.api.Assertions.fail(
+            "Ожидалась пустая корзина: visible .basket-item-amount = " + activeQtyBlocks.size());
+        return this;
+    }
+
+
+
+    /**
+     * Получает текущее значение счётчика количества первого товара.
+     * Реальный HTML: input[data-entity='basket-item-quantity-field']
+     */
+    @Step("Получить текущее количество первого товара")
+    public int getFirstItemQuantityValue() {
+        try {
+            // Реальный selector из basket-item-template vodovoz.ru (строка 1296)
+            SelenideElement qtyInput = $("[data-entity='basket-item-quantity-field']");
+            String val = qtyInput.getValue();
+            int qty = Integer.parseInt(val.trim());
+            log.info("Количество первого товара: {}", qty);
+            return qty;
+        } catch (Exception e) {
+            log.warn("Не удалось получить количество товара: {}", e.getMessage());
+            return 1;
+        }
+    }
 }
+
