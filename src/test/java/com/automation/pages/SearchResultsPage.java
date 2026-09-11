@@ -6,6 +6,16 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.time.Duration;
+
+import com.codeborne.selenide.SelenideElement;
+import java.time.Duration;
+import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.open;
+
+
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
@@ -28,18 +38,24 @@ public class SearchResultsPage extends BasePage {
 
     // ── Локаторы ─────────────────────────────────────────────────────────────
 
-    private final ElementsCollection productCards   = $$(".catalog-block__wrapper");
-    private final ElementsCollection productTitles  = $$(".catalog-block__info-title a.dark_link");
-    private final SelenideElement    catalogItems   = $(".catalog-items");
+    private final ElementsCollection productCards = $$(".catalog-block__wrapper");
+    private final ElementsCollection productTitles = $$(".catalog-block__info-title a.dark_link");
+    private final SelenideElement catalogItems = $(".catalog-items");
 
-    /** Первая кнопка «В корзину» среди результатов */
+    /**
+     * Первая кнопка «В корзину» среди результатов
+     */
     private final SelenideElement firstAddToCartBtn = $("span.to_cart[data-action='basket']");
 
-    /** Все кнопки «В корзину» */
-    private final ElementsCollection addToCartBtns  = $$("span.to_cart[data-action='basket']");
+    /**
+     * Все кнопки «В корзину»
+     */
+    private final ElementsCollection addToCartBtns = $$("span.to_cart[data-action='basket']");
 
-    /** Счётчик товаров в корзине (шапка сайта) */
-    private final SelenideElement cartCounter       = $(".header-cart__count");
+    /**
+     * Счётчик товаров в корзине (шапка сайта)
+     */
+    private final SelenideElement cartCounter = $(".header-cart__count");
 
     // ── Проверки ─────────────────────────────────────────────────────────────
 
@@ -77,11 +93,11 @@ public class SearchResultsPage extends BasePage {
 
     /**
      * Добавляет первый товар из результатов поиска в корзину.
-     *
+     * <p>
      * Особенности vodovoz.ru:
      * - Добавление через AJAX (без перезагрузки страницы)
      * - На странице может быть попап .popup-text-info__text (уведомление о доставке)
-     *   который перехватывает клики — закрываем его перед кликом
+     * который перехватывает клики — закрываем его перед кликом
      * - Используем JS-клик для надёжного обхода любых оверлеев
      *
      * @return имя добавленного товара (для проверки в корзине)
@@ -119,15 +135,15 @@ public class SearchResultsPage extends BasePage {
     private void closePoupupsIfPresent() {
         // Список возможных кнопок закрытия попапов на vodovoz.ru
         String[] closeSelectors = {
-            ".popup-text-info .close",
-            ".popup-text-info__close",
-            ".popup-closer",
-            ".mfp-close",
-            "button.close",
-            "[class*='popup'] [class*='close']",
-            "[class*='modal'] [class*='close']",
-            ".cookie-notice__close",
-            ".alert .close"
+                ".popup-text-info .close",
+                ".popup-text-info__close",
+                ".popup-closer",
+                ".mfp-close",
+                "button.close",
+                "[class*='popup'] [class*='close']",
+                "[class*='modal'] [class*='close']",
+                ".cookie-notice__close",
+                ".alert .close"
         };
 
         for (String selector : closeSelectors) {
@@ -146,9 +162,10 @@ public class SearchResultsPage extends BasePage {
         // Дополнительно: закрываем попап кликом вне его области (ESC)
         try {
             com.codeborne.selenide.Selenide.actions().sendKeys(
-                org.openqa.selenium.Keys.ESCAPE).perform();
+                    org.openqa.selenium.Keys.ESCAPE).perform();
             com.codeborne.selenide.Selenide.sleep(300);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
 
@@ -180,7 +197,9 @@ public class SearchResultsPage extends BasePage {
         return productTitles.first().shouldBe(visible).getText().trim();
     }
 
-    /** Алиас для совместимости с тестами */
+    /**
+     * Алиас для совместимости с тестами
+     */
     @Step("Получить название первого товара")
     public String getFirstProductName() {
         return getFirstProductTitle();
@@ -204,7 +223,7 @@ public class SearchResultsPage extends BasePage {
 
         // Кнопка «В избранное» первого товара
         com.codeborne.selenide.SelenideElement favoriteBtn =
-            com.codeborne.selenide.Selenide.$("a.js-item-action[data-action='favorite']");
+                com.codeborne.selenide.Selenide.$("a.js-item-action[data-action='favorite']");
 
         favoriteBtn.shouldBe(Condition.visible).scrollIntoView("{block: 'center'}");
         com.codeborne.selenide.Selenide.executeJavaScript("arguments[0].click()", favoriteBtn);
@@ -213,7 +232,7 @@ public class SearchResultsPage extends BasePage {
         // Ждём обновления счётчика избранного
         try {
             com.codeborne.selenide.Selenide.$(".icon-count--favorite")
-                .shouldNotHave(Condition.text("0"), java.time.Duration.ofSeconds(10));
+                    .shouldNotHave(Condition.text("0"), java.time.Duration.ofSeconds(10));
             log.info("Счётчик избранного обновился ✓");
         } catch (Exception e) {
             log.warn("Счётчик избранного не обновился — возможно, требуется авторизация");
@@ -221,4 +240,27 @@ public class SearchResultsPage extends BasePage {
 
         return productName;
     }
+
+    @Step("Открыть карточку первого товара из выдачи")
+    public ProductPage openFirstProduct() {
+        // Ссылка на НАЗВАНИЕ товара: href обязан вести в /catalog/ —
+        // это отсекает телефон и мессенджеры (tel:, viber:), которые
+        // вызывали окно "Открыть приложение"
+        SelenideElement firstProductLink = $$("a[href*='/catalog/'][class*='title'], a[href*='/catalog/'][class*='name']")
+                .filter(visible)
+                .first()
+                .shouldBe(visible, Duration.ofSeconds(10));
+
+        String href = firstProductLink.getAttribute("href");
+        if (href != null && href.startsWith("/")) {
+            href = "https://vodovoz.ru" + href;
+        }
+        open(href);
+
+        // Предохранитель: мы ВНУТРИ карточки — блок характеристик есть только на PDP.
+        // Если остались на выдаче или попали в раздел каталога — тест упадёт здесь сразу
+        $(".char-side, .properties.list").shouldBe(visible, Duration.ofSeconds(10));
+        return new ProductPage();
+    }
+
 }
