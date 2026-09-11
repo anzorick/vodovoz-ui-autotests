@@ -12,6 +12,7 @@ import static com.codeborne.selenide.Selenide.open;
 
 @Epic("Интернет-магазин Vodovoz.ru")
 @Feature("Сервисные формы")
+@DisplayName("Сервисные формы: заказ звонка")
 public class CallbackFormTest extends BaseTest {
 
     @Test

@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Epic("Интернет-магазин Vodovoz.ru")
 @Feature("Карточка товара (PDP)")
+@DisplayName("Карточка товара (PDP)")
 public class ProductCardTest extends BaseTest {
 
     @Test
