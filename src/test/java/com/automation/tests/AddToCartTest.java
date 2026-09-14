@@ -1,6 +1,7 @@
 package com.automation.tests;
 
 import com.automation.base.BaseTest;
+import com.automation.base.ConfigReader;
 import com.automation.pages.CartPage;
 import com.automation.pages.SearchPage;
 import com.automation.pages.SearchResultsPage;
@@ -14,7 +15,9 @@ import io.qameta.allure.Step;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,45 +26,40 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 /**
  * E2E-тест: Поиск → Добавление в корзину → Проверка корзины (vodovoz.ru).
  *
- * Сценарий:
- *   1. Открыть главную страницу
- *   2. Найти товар через строку поиска
- *   3. Запомнить название первого товара
- *   4. Нажать «В корзину»
- *   5. Дождаться AJAX-обновления счётчика корзины
- *   6. Перейти на страницу /basket/
- *   7. Проверить, что товар в корзине присутствует
+ * <p>Параметризованный тест запускается для нескольких поисковых запросов,
+ * гарантируя работоспособность корзины с разными типами товаров.
  */
 @Epic("vodovoz.ru")
 @Feature("Корзина")
 @DisplayName("E2E: Поиск → Корзина")
+@Tag("smoke")
+@Tag("regression")
+@Tag("cart")
 class AddToCartTest extends BaseTest {
 
     private static final Logger log = LoggerFactory.getLogger(AddToCartTest.class);
 
-    private final SearchPage       searchPage   = new SearchPage();
+    private final SearchPage        searchPage  = new SearchPage();
     private final SearchResultsPage resultsPage = new SearchResultsPage();
-    private final CartPage         cartPage     = new CartPage();
-
-    /** Поисковый запрос — товар с простой кнопкой «В корзину» без выбора параметров */
-    private static final String SEARCH_QUERY = "вода питьевая";
+    private final CartPage          cartPage    = new CartPage();
 
     @BeforeEach
     void openMainPage() {
         searchPage.openPage().searchInputShouldBeReady();
-        Selenide.sleep(2000); // пауза — видим главную страницу
+        Selenide.sleep(2000);
     }
 
-    // ── E2E Тест ─────────────────────────────────────────────────────────────
+    // ── E2E Параметризованный тест ────────────────────────────────────────────
 
-    @Test
+    @ParameterizedTest(name = "E2E корзина: товар по запросу ''{0}''")
+    @CsvSource({"вода питьевая", "кулер"})
     @Story("Добавление товара в корзину")
     @Severity(SeverityLevel.CRITICAL)
-    @DisplayName("E2E: Поиск 'вода питьевая' → В корзину → Корзина содержит товар")
+    @DisplayName("E2E: Поиск → В корзину → Корзина содержит товар")
     @Description("""
-            E2E-сценарий:
+            E2E-сценарий (параметризован по поисковому запросу):
             1. Открыть главную страницу vodovoz.ru
-            2. Ввести в строку поиска: вода питьевая
+            2. Ввести в строку поиска переданный query
             3. Дождаться результатов (не менее 1 товара)
             4. Запомнить название первого товара
             5. Нажать кнопку «В корзину» первого товара
@@ -70,36 +68,36 @@ class AddToCartTest extends BaseTest {
             8. Проверить, что корзина не пуста
             9. Проверить, что добавленный товар присутствует в корзине
             """)
-    void testSearchAndAddToCart() {
+    void testSearchAndAddToCart(String query) {
         // ── Шаг 1: Поиск товара ───────────────────────────────────────────────
-        SearchResultsPage results = searchPage.search(SEARCH_QUERY);
-        Selenide.sleep(2000); // видим результаты поиска
+        SearchResultsPage results = searchPage.search(query);
+        Selenide.sleep(2000);
 
         results.shouldBeLoaded();
         results.shouldHaveProductsAtLeast(1);
 
         // ── Шаг 2: Запомнить название первого товара ──────────────────────────
         String productName = rememberFirstProduct(results);
-        log.info("Добавляем в корзину: '{}'", productName);
+        log.info("Запрос='{}', добавляем: '{}'", query, productName);
 
         // ── Шаг 3: Добавить в корзину ─────────────────────────────────────────
         results.addFirstProductToCart();
-        Selenide.sleep(2000); // видим обновлённый счётчик
+        Selenide.sleep(2000);
 
         // ── Шаг 4: Проверить счётчик корзины в шапке ─────────────────────────
         results.cartCounterShouldBePositive();
-        log.info("Счётчик корзины обновился до: {}", results.getCartCounterText());
+        log.info("Счётчик корзины: {}", results.getCartCounterText());
 
         // ── Шаг 5: Открыть корзину ────────────────────────────────────────────
         cartPage.open();
-        Selenide.sleep(2000); // видим страницу корзины
+        Selenide.sleep(2000);
 
         // ── Шаг 6: Проверить корзину ──────────────────────────────────────────
         cartPage.shouldBeLoaded();
         cartPage.shouldNotBeEmpty();
         cartPage.shouldContainProduct(extractKeyword(productName));
 
-        log.info("E2E-тест пройден: '{}' успешно добавлен в корзину ✓", productName);
+        log.info("E2E-тест пройден: '{}' добавлен в корзину ✓", productName);
     }
 
     // ── Вспомогательные шаги ─────────────────────────────────────────────────
@@ -113,12 +111,11 @@ class AddToCartTest extends BaseTest {
     }
 
     /**
-     * Извлекает ключевое слово из полного названия товара для поиска в корзине.
-     * Например: "Вода питьевая BonAqua 0.5 л" → "BonAqua" или "Вода"
+     * Извлекает ключевое слово (первые два слова) из полного названия товара.
+     * Например: «Вода питьевая BonAqua 0.5 л» → «Вода питьевая»
      */
     private String extractKeyword(String fullName) {
         if (fullName == null || fullName.isBlank()) return "вода";
-        // Берём первые два слова названия
         String[] words = fullName.trim().split("\\s+");
         return words.length >= 2 ? words[0] + " " + words[1] : words[0];
     }

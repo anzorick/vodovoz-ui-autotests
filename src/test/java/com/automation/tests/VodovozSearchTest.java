@@ -13,6 +13,7 @@ import io.qameta.allure.Step;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -27,6 +28,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 @Epic("vodovoz.ru")
 @Feature("Поиск товаров")
 @DisplayName("Поиск на vodovoz.ru")
+@Tag("smoke")
+@Tag("regression")
+@Tag("catalog")
 class VodovozSearchTest extends BaseTest {
 
     private final SearchPage searchPage = new SearchPage();

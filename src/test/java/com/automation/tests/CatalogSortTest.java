@@ -6,6 +6,7 @@ import com.codeborne.selenide.Selenide;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -16,6 +17,8 @@ import org.junit.jupiter.api.Test;
 @Epic("vodovoz.ru")
 @Feature("Каталог — Сортировка")
 @DisplayName("Сортировка товаров в каталоге")
+@Tag("regression")
+@Tag("catalog")
 class CatalogSortTest extends BaseTest {
 
     private static final String CATALOG_SLUG = "pitevaya_voda_19_litrov";

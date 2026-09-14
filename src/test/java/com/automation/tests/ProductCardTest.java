@@ -9,6 +9,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import com.automation.base.BaseTest;
 
@@ -19,6 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Epic("Интернет-магазин Vodovoz.ru")
 @Feature("Карточка товара (PDP)")
 @DisplayName("Карточка товара (PDP)")
+@Tag("smoke")
+@Tag("regression")
+@Tag("cart")
 public class ProductCardTest extends BaseTest {
 
     @Test

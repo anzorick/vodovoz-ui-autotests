@@ -18,6 +18,8 @@ import org.junit.jupiter.api.*;
 @Feature("Корзина — Управление количеством")
 @DisplayName("Корзина: изменение количества и удаление товара")
 @TestMethodOrder(MethodOrderer.DisplayName.class)
+@Tag("regression")
+@Tag("cart")
 class CartQuantityTest extends BaseTest {
 
     private final CartPage     cartPage    = new CartPage();

@@ -210,6 +210,8 @@ public class ProductPage extends BasePage {
         log.info("Кнопка 'В корзину' видима, нажимаю через JS-клик...");
         executeJavaScript("arguments[0].click()", addToCartButton);
         log.info("Кнопка 'В корзину' нажата (JS-клик) ✓");
+        // Пауза для AJAX — сервер обрабатывает запрос и обновляет DOM (div.in_cart появляется)
+        com.codeborne.selenide.Selenide.sleep(1500);
         return this;
     }
 

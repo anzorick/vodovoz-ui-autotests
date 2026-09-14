@@ -1,18 +1,23 @@
 package com.automation.tests;
 
 import com.automation.base.BaseTest;
+import com.automation.base.ConfigReader;
 import com.automation.pages.CallbackModal;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
 import static com.codeborne.selenide.Selenide.open;
 
 @Epic("Интернет-магазин Vodovoz.ru")
 @Feature("Сервисные формы")
 @DisplayName("Сервисные формы: заказ звонка")
+@Tag("regression")
+@Tag("forms")
 public class CallbackFormTest extends BaseTest {
 
     @Test
@@ -33,9 +38,9 @@ public class CallbackFormTest extends BaseTest {
     void testWrongCaptchaRejectsSubmission() {
         open("/");
         new CallbackModal().open()
-                .enterName("Тест Тестович")
-                .enterPhone("9123456789")
-                .enterCaptcha("12345")
+                .enterName(ConfigReader.get("callback.name"))
+                .enterPhone(ConfigReader.get("callback.phone"))
+                .enterCaptcha(ConfigReader.get("callback.captcha"))
                 .submit()
                 .shouldNotBeSubmitted();
     }

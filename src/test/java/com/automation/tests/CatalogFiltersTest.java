@@ -4,6 +4,7 @@ import com.automation.base.BaseTest;
 import com.automation.pages.CatalogFiltersPage;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Selenide.open;
@@ -27,6 +28,8 @@ import static com.codeborne.selenide.Selenide.sleep;
 @Epic("vodovoz.ru")
 @Feature("Каталог — Фильтры")
 @DisplayName("Фильтрация товаров в каталоге")
+@Tag("regression")
+@Tag("catalog")
 class CatalogFiltersTest extends BaseTest {
 
     private static final String CATALOG_19L = "/catalog/pitevaya_voda_19_litrov/";
