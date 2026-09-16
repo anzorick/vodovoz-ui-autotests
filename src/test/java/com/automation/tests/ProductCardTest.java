@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import com.automation.base.BaseTest;
+import com.automation.base.ConfigReader;
 
 
 import static com.codeborne.selenide.Selenide.open;
@@ -70,4 +71,17 @@ public class ProductCardTest extends BaseTest {
                 .quantityCounterShouldBeVisible();
     }
 
+    @Test
+    @Story("Просмотр информации о товаре")
+    @DisplayName("Открытие таба 'Отзывы' на карточке товара")
+    @Description("Поиск -> открытие карточки первого товара -> клик по табу 'Отзывы' -> блок отзывов загружен")
+    void testProductReviewsTabOpens() {
+        open("/");
+        SearchPage searchPage = new SearchPage();
+        SearchResultsPage resultsPage = searchPage.search(ConfigReader.get("pdp.query"));
+        ProductPage productPage = resultsPage.openFirstProduct();
+        productPage.shouldBeLoaded()
+                .openReviewsTab()
+                .reviewsShouldBeLoaded();
+    }
 }

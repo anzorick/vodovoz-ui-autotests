@@ -27,7 +27,7 @@ public final class ConfigReader {
                 throw new IllegalStateException(
                     "config.properties не найден в classpath (src/test/resources/config.properties)");
             }
-            PROPS.load(in);
+            PROPS.load(new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new IllegalStateException("Ошибка загрузки config.properties", e);
         }

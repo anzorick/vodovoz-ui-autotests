@@ -1,8 +1,10 @@
 package com.automation.tests;
 
 import com.automation.base.BaseTest;
+import com.automation.base.ConfigReader;
 import com.automation.pages.SearchPage;
 import com.automation.pages.SearchResultsPage;
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -18,6 +20,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.time.Duration;
+
 
 /**
  * Тесты поисковой формы на сайте vodovoz.ru.
@@ -32,6 +36,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 @Tag("regression")
 @Tag("catalog")
 class VodovozSearchTest extends BaseTest {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(VodovozSearchTest.class);
 
     private final SearchPage searchPage = new SearchPage();
 
@@ -148,6 +154,53 @@ class VodovozSearchTest extends BaseTest {
 
         // Шаг 4: Проверить что хотя бы один товар содержит поисковое слово
         checkKeywordInResults(results, query);
+    }
+
+    // ── Тест 4: Негативный поиск — бессмысленный запрос ──────────────────────
+
+    @Test
+    @Story("Негативный поиск")
+    @Severity(SeverityLevel.NORMAL)
+    @DisplayName("Поиск бессмысленного запроса не вызывает ошибку страницы")
+    @Description("""
+            Сценарий (негативный):
+            1. Открыть главную страницу vodovoz.ru
+            2. Ввести в строку поиска заведомо бессмысленный запрос
+               (значение берётся из config.properties: search.query.garbage)
+            3. Дождаться загрузки страницы результатов
+            4. Проверить: URL содержит поисковой запрос (q=)
+            5. Проверить: страница не упала с ошибкой 500/404 —
+               блок .catalog-items видим (сайт показывает рекомендации)
+            """)
+    void testGarbageQueryShowsEmptyOrRecommendations() {
+        String garbageQuery = ConfigReader.get("search.query.garbage");
+
+        // Шаг 1: Поиск по бессмысленному запросу
+        SearchResultsPage results = searchPage.search(garbageQuery);
+        Selenide.sleep(2000);
+
+        // Шаг 2: URL содержит поисковой запрос
+        verifySearchUrl(results, garbageQuery);
+
+        // Шаг 3: Страница не упала — блок контента видим
+        // vodovoz.ru при «нулевом» поиске показывает блок рекомендаций (catalog-items)
+        verifyCatalogItemsVisible();
+    }
+
+    @Step("URL должен содержать параметр поискового запроса")
+    private void verifySearchUrl(SearchResultsPage results, String query) {
+        String url = results.getCurrentUrl().toLowerCase();
+        org.junit.jupiter.api.Assertions.assertTrue(
+            url.contains("q=") || url.contains(java.net.URLEncoder.encode(query.toLowerCase(), java.nio.charset.StandardCharsets.UTF_8)),
+            "URL должен содержать поисковой запрос. URL был: " + url
+        );
+    }
+
+    @Step("Блок catalog-items видим (страница не упала, показаны рекомендации)")
+    private void verifyCatalogItemsVisible() {
+        com.codeborne.selenide.Selenide.$(".catalog-items")
+            .shouldBe(Condition.visible, Duration.ofSeconds(10));
+        log.info("Блок .catalog-items видим — страница загружена без ошибок ✓");
     }
 
     // ── Вспомогательные шаги (@Step для Allure) ───────────────────────────────

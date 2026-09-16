@@ -109,4 +109,21 @@ public class FavoritesPage extends BasePage {
         log.info("Счётчик избранного: {}", favoritesCounter.getText());
         return this;
     }
+
+    // Сердечко-переключатель на карточке в избранном
+    private final ElementsCollection favoriteToggleButtons = $$("a.js-item-action[data-action='favorite']");
+    @Step("Удалить первый товар из избранного")
+    public FavoritesPage removeFirstProduct() {
+        favoriteToggleButtons.first()
+                .shouldBe(Condition.visible, java.time.Duration.ofSeconds(10))
+                .click();
+        com.codeborne.selenide.Selenide.sleep(1500); // пауза на AJAX-запрос
+        return this;
+    }
+
+    @Step("Проверить, что товара больше нет в избранном: {titlePart}")
+    public FavoritesPage shouldNotContainProduct(String titlePart) {
+        $("body").shouldNotHave(Condition.text(titlePart), java.time.Duration.ofSeconds(10));
+        return this;
+    }
 }

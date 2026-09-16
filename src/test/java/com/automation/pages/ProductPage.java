@@ -239,4 +239,24 @@ public class ProductPage extends BasePage {
         log.info("Счётчик в шапке: '{}' ✓", headerCartCount.getText());
         return this;
     }
+
+    // Таб «Отзывы» на карточке товара (Bootstrap tab)
+    private final SelenideElement reviewsTab = $("a[href='#reviews'][data-toggle='tab']");
+    private final SelenideElement reviewsPane = $("div.tab-pane#reviews");
+
+    @Step("Открыть таб 'Отзывы' на карточке товара")
+    public ProductPage openReviewsTab() {
+        reviewsTab.shouldBe(visible, Duration.ofSeconds(10))
+                .scrollIntoView("{block: 'center'}")
+                .click();
+        reviewsPane.shouldBe(visible, Duration.ofSeconds(10));
+        return this;
+    }
+
+    @Step("Проверить, что блок отзывов загрузился: список, сообщение об отсутствии или кнопка добавления")
+    public ProductPage reviewsShouldBeLoaded() {
+        $("div.tab-pane#reviews .ordered-block__title, div.tab-pane#reviews .show-comment.btn, [id^='bx-cat-soc-comments-blg']")
+                .shouldBe(visible, Duration.ofSeconds(10));
+        return this;
+    }
 }

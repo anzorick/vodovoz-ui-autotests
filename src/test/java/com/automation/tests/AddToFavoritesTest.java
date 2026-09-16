@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.automation.base.ConfigReader;
 
 /**
  * Тест: Добавление товара в избранное (гостевой режим).
@@ -114,5 +115,24 @@ class AddToFavoritesTest extends BaseTest {
             // Неожиданный URL — проверяем что хотя бы URL корректный
             log.warn("Неожиданный URL после клика «В избранное»: {}", currentUrl);
         }
+    }
+
+    @Test
+    @Story("Управление избранным гостем")
+    @DisplayName("Удаление товара из избранного (гостевой режим)")
+    @Description("Поиск -> добавить в избранное -> открыть избранное -> удалить первый товар -> товар исчез из списка")
+    void testRemoveFromFavorites() {
+        com.codeborne.selenide.Selenide.open("/");
+        SearchPage searchPage = new SearchPage();
+        SearchResultsPage resultsPage = searchPage.search(ConfigReader.get("search.query.cooler"));
+        String productTitle = rememberProduct(resultsPage);
+        resultsPage.addFirstProductToFavorites();
+        com.codeborne.selenide.Selenide.sleep(1500); // пауза на AJAX/localStorage
+        navigateToFavorites();
+        favoritesPage.checkFavoritesNotEmpty();
+        String shortTitle = productTitle.substring(0, Math.min(productTitle.length(), 15));
+        favoritesPage.shouldContainProduct(shortTitle);
+        favoritesPage.removeFirstProduct();
+        favoritesPage.shouldNotContainProduct(shortTitle);
     }
 }
