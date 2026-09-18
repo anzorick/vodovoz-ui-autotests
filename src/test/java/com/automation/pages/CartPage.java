@@ -329,7 +329,6 @@ public class CartPage extends BasePage {
     @Step("Получить текущее количество первого товара")
     public int getFirstItemQuantityValue() {
         try {
-            // Реальный selector из basket-item-template vodovoz.ru (строка 1296)
             SelenideElement qtyInput = $("[data-entity='basket-item-quantity-field']");
             String val = qtyInput.getValue();
             int qty = Integer.parseInt(val.trim());
@@ -339,6 +338,217 @@ public class CartPage extends BasePage {
             log.warn("Не удалось получить количество товара: {}", e.getMessage());
             return 1;
         }
+    }
+
+    // ── Бизнес-логика цен ─────────────────────────────────────────────────────
+
+    /**
+     * Возвращает цену единицы первого товара в корзине (int, рубли).
+     *
+     * DOM: span.basket-item-price-current-text — содержит текст вида "1 140 ₽"
+     * Парсинг: убираем все нецифровые символы (включая \u00A0 — неразрывный пробел).
+     */
+    @Step("Получить цену единицы первого товара (₽)")
+    public int getUnitPrice() {
+        String[] selectors = {
+            ".basket-item-price-current-text",
+            "[id^='basket-item-price-']",
+            ".basket-item-price .price",
+            ".basket-item-price-current span"
+        };
+        for (String sel : selectors) {
+            try {
+                SelenideElement el = $(sel);
+                if (el.exists() && el.isDisplayed()) {
+                    String raw = el.getText().replaceAll("[^\\d]", "").trim();
+                    if (!raw.isEmpty()) {
+                        int price = Integer.parseInt(raw);
+                        log.info("Цена единицы ({}) = {} ₽", sel, price);
+                        return price;
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+        log.warn("Не удалось получить цену единицы товара — возвращаю 0");
+        return 0;
+    }
+
+    /**
+     * Возвращает итоговую сумму корзины (Grand Total, int, рубли).
+     *
+     * DOM: div.basket-checkout-total-price-inner — содержит итог вида "1 140 ₽"
+     * Парсинг: убираем все нецифровые символы.
+     */
+    @Step("Получить итоговую сумму корзины (Grand Total, ₽)")
+    public int getGrandTotal() {
+        String[] selectors = {
+            ".basket-checkout-total-price-inner .price",
+            ".basket-checkout-total-price-inner",
+            "[data-entity='basket-total-price']",
+            ".basket-checkout-total-price",
+            ".basket-total__price"
+        };
+        for (String sel : selectors) {
+            try {
+                SelenideElement el = $(sel);
+                if (el.exists() && el.isDisplayed()) {
+                    String raw = el.getText().replaceAll("[^\\d]", "").trim();
+                    if (!raw.isEmpty()) {
+                        int total = Integer.parseInt(raw);
+                        log.info("Grand Total ({}) = {} ₽", sel, total);
+                        return total;
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+        // Fallback к старому методу
+        return getCartTotalPriceValue();
+    }
+
+    /**
+     * Возвращает текущее количество первого товара (alias для getFirstItemQuantityValue).
+     */
+    @Step("Получить количество (quantity) первого товара")
+    public int getQuantity() {
+        return getFirstItemQuantityValue();
+    }
+
+    /**
+     * Увеличивает количество первого товара кликом «+».
+     * Ждёт завершения AJAX: значение input меняется ИЛИ jQuery.active == 0.
+     */
+    @Step("Нажать «+» и дождаться пересчёта AJAX")
+    public CartPage increaseQuantity() {
+        log.info("Нажимаю «+»...");
+        int before = getQuantity();
+        SelenideElement plusBtn = $("[data-entity='basket-item-quantity-plus']");
+        plusBtn.shouldBe(Condition.visible, java.time.Duration.ofSeconds(10));
+        executeJavaScript("arguments[0].click()", plusBtn);
+        waitForAjaxAndQuantityChange(before, before + 1);
+        log.info("Нажата «+», quantity ожидается = {} ✓", before + 1);
+        return this;
+    }
+
+    /**
+     * Уменьшает количество первого товара кликом «−».
+     * Ждёт завершения AJAX: значение input меняется.
+     */
+    @Step("Нажать «−» и дождаться пересчёта AJAX")
+    public CartPage decreaseQuantity() {
+        log.info("Нажимаю «−»...");
+        int before = getQuantity();
+        int expected = Math.max(1, before - 1);
+        SelenideElement minusBtn = $("[data-entity='basket-item-quantity-minus']");
+        minusBtn.shouldBe(Condition.visible, java.time.Duration.ofSeconds(10));
+        executeJavaScript("arguments[0].click()", minusBtn);
+        waitForAjaxAndQuantityChange(before, expected);
+        log.info("Нажата «−», quantity ожидается = {} ✓", expected);
+        return this;
+    }
+
+    /**
+     * Ждёт изменения количества в input (polling до 10 секунд).
+     */
+    private void waitForAjaxAndQuantityChange(int before, int expectedQty) {
+        long deadline = System.currentTimeMillis() + 10_000;
+        while (System.currentTimeMillis() < deadline) {
+            try {
+                // Ждём jQuery.active == 0 (AJAX завершён)
+                Boolean ajaxDone = (Boolean) executeJavaScript("return typeof jQuery !== 'undefined' ? jQuery.active == 0 : true");
+                if (Boolean.TRUE.equals(ajaxDone)) {
+                    int current = getFirstItemQuantityValue();
+                    if (current == expectedQty || current != before) {
+                        log.info("AJAX завершён, quantity = {}", current);
+                        return;
+                    }
+                }
+            } catch (Exception ignored) {}
+            com.codeborne.selenide.Selenide.sleep(500);
+        }
+        // Таймаут — принимаем как есть (AJAX мог обновить DOM по-другому)
+        log.warn("Таймаут ожидания изменения quantity (before={}, expected={})", before, expectedQty);
+    }
+
+    /**
+     * Ждёт (до 10 секунд) пока Grand Total не станет равен ожидаемому значению.
+     * Если не дождались — AssertionError с фактическим значением.
+     *
+     * @param expectedRubles ожидаемая сумма в рублях
+     */
+    @Step("Ожидать что Grand Total = {expectedRubles} ₽ (polling, до 10 сек)")
+    public CartPage waitUntilGrandTotalEquals(int expectedRubles) {
+        log.info("Polling: ожидаю Grand Total = {} ₽", expectedRubles);
+        long deadline = System.currentTimeMillis() + 10_000;
+        int actual = 0;
+        while (System.currentTimeMillis() < deadline) {
+            actual = getGrandTotal();
+            if (actual == expectedRubles) {
+                log.info("Grand Total = {} ₽ ✓", actual);
+                return this;
+            }
+            log.debug("Polling: actual={}, expected={}", actual, expectedRubles);
+            com.codeborne.selenide.Selenide.sleep(500);
+        }
+        throw new AssertionError(
+            String.format("Grand Total не стал %d ₽ за 10 сек. Фактически: %d ₽", expectedRubles, actual)
+        );
+    }
+
+    // ── Промокод ─────────────────────────────────────────────────────────────
+
+    /**
+     * Проверяет, существует ли поле промокода на странице корзины.
+     * DOM: input[data-entity='basket-coupon-input']
+     */
+    @Step("Проверить наличие поля промокода")
+    public boolean isPromoCodeFieldPresent() {
+        try {
+            SelenideElement field = $("[data-entity='basket-coupon-input']");
+            boolean present = field.exists();
+            log.info("Поле промокода присутствует: {}", present);
+            return present;
+        } catch (Exception e) {
+            log.warn("Ошибка проверки поля промокода: {}", e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Вводит промокод в поле и нажимает кнопку применения.
+     * DOM: input[data-entity='basket-coupon-input'] + span.basket-coupon-block-coupon-btn
+     *
+     * @param promoCode промокод для ввода
+     */
+    @Step("Ввести промокод '{promoCode}' и применить")
+    public CartPage enterAndApplyPromoCode(String promoCode) {
+        log.info("Ввожу промокод: {}", promoCode);
+        SelenideElement couponInput = $("[data-entity='basket-coupon-input']");
+        couponInput.shouldBe(Condition.visible, java.time.Duration.ofSeconds(10));
+        couponInput.clear();
+        couponInput.setValue(promoCode);
+
+        // Кнопка применения промокода
+        SelenideElement applyBtn = $(".basket-coupon-block-coupon-btn");
+        applyBtn.shouldBe(Condition.visible, java.time.Duration.ofSeconds(10));
+        executeJavaScript("arguments[0].click()", applyBtn);
+        log.info("Промокод '{}' введён и применён (JS-клик) ✓", promoCode);
+
+        // Ждём AJAX-ответа
+        com.codeborne.selenide.Selenide.sleep(2000);
+        return this;
+    }
+
+    /**
+     * Проверяет, что после применения неверного промокода появился alert/сообщение об ошибке.
+     * DOM: .basket-coupon-alert-section, .basket-coupon-text, .basket-checkout-info
+     */
+    @Step("Проверить сообщение об ошибке промокода")
+    public CartPage promoCodeErrorShouldBeVisible() {
+        log.info("Проверяю сообщение об ошибке промокода...");
+        SelenideElement errorBlock = $(".basket-coupon-alert-section, .basket-coupon-info__text");
+        errorBlock.shouldBe(Condition.visible, java.time.Duration.ofSeconds(10));
+        log.info("Сообщение об ошибке промокода видимо ✓");
+        return this;
     }
 }
 
