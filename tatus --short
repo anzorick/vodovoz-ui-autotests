@@ -1,0 +1,17 @@
+warning: in the working copy of 'src/test/resources/config.properties', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/src/test/resources/config.properties b/src/test/resources/config.properties[m
+[1mindex 3c0928d..ff164e4 100644[m
+[1m--- a/src/test/resources/config.properties[m
+[1m+++ b/src/test/resources/config.properties[m
+[36m@@ -29,4 +29,8 @@[m [mpromo.code.invalid=TESTWRONG123[m
+ [m
+ # ── Screenshots ───────────────────────────────────────────────────────────────[m
+ screenshots.on.failure=true[m
+[31m-screenshots.path=screenshots[m
+\ No newline at end of file[m
+[32m+[m[32mscreenshots.path=screenshots[m
+[32m+[m
+[32m+[m[32m# — Auth (real credentials pass via -Dauth.email / -Dauth.password, never commit them)[m
+[32m+[m[32mauth.email=anzorick93@gmail.com[m
+[32m+[m[32mauth.password=04023562[m
+\ No newline at end of file[m

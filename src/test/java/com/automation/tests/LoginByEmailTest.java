@@ -107,4 +107,30 @@ class LoginByEmailTest extends BaseTest {
         String errorText = authPage.getErrorText();
         log.info("Текст ошибки: '{}'", errorText);
     }
+
+    @Test
+    @DisplayName("Успешная авторизация по Email и паролю")
+    @Description("Открыть модалку -> войти через почту -> ввести валидные креды -> согласие -> войти -> модалка закрыта, шапка авторизована, /personal/ открывается без редиректа на вход")
+    public void testLoginWithValidCredentials() {
+        String email = com.automation.base.ConfigReader.get("auth.email");
+        String password = com.automation.base.ConfigReader.get("auth.password");
+        org.junit.jupiter.api.Assumptions.assumeTrue(
+                !email.contains("placeholder"),
+                "Не переданы реальные креды тестового аккаунта (-Dauth.email / -Dauth.password) — тест пропускается");
+
+        com.codeborne.selenide.Selenide.open("/");
+        openLoginModal();
+        authPage.switchToEmailLogin()
+                .enterEmail(email)
+                .enterPassword(password)
+                .acceptPersonalDataConsent()
+                .clickSubmit();
+        authPage.shouldBeLoggedIn();
+
+        // Контроль: личный кабинет открывается без редиректа на форму входа
+        com.codeborne.selenide.Selenide.open("/personal/");
+        org.junit.jupiter.api.Assertions.assertTrue(
+                com.codeborne.selenide.WebDriverRunner.url().contains("/personal/"),
+                "После входа /personal/ должен открываться без редиректа на авторизацию");
+    }
 }

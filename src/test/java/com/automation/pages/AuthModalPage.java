@@ -199,4 +199,16 @@ public class AuthModalPage extends BasePage {
         }
         return "(сообщение об ошибке найдено по URL — авторизация не прошла)";
     }
+
+    private final SelenideElement authFrame = $("div.auth_frame");
+    private final SelenideElement headerCabinetLink = $("a.header-cabinet__link");
+
+    @Step("Проверить успешный вход: модалка закрылась, в шапке нет кнопки 'Войти'")
+    public void shouldBeLoggedIn() {
+        authFrame.shouldBe(com.codeborne.selenide.Condition.hidden, java.time.Duration.ofSeconds(10));
+        headerCabinetLink.shouldBe(com.codeborne.selenide.Condition.visible, java.time.Duration.ofSeconds(10))
+                .shouldNotHave(com.codeborne.selenide.Condition.text("Войти"), java.time.Duration.ofSeconds(10));
+    }
+
+
 }
