@@ -95,7 +95,13 @@ class ProductCompareTest extends BaseTest {
     @Step("Open catalog /catalog/pitevaya_voda_19_litrov/")
     private void openCatalog() {
         open("/catalog/pitevaya_voda_19_litrov/");
-        $(".catalog-block__wrapper").shouldBe(visible, Duration.ofSeconds(10));
+        try {
+            $(".catalog-block__wrapper").shouldBe(visible, Duration.ofSeconds(10));
+        } catch (Throwable reload) {
+            log.info("Каталог пришёл пустым (блокировка/пустой ответ сайта) — перезагружаю один раз");
+            Selenide.refresh();
+            $(".catalog-block__wrapper").shouldBe(visible, Duration.ofSeconds(15));
+        }
         Selenide.sleep(1000);
         log.info("Catalog page loaded");
     }

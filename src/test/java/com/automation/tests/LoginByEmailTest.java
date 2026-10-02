@@ -88,7 +88,13 @@ class LoginByEmailTest extends BaseTest {
     private void openLoginModal() {
         log.info("Открываю форму авторизации");
         authPage.clickLoginInHeader();
-        authPage.waitForModalToOpen();
+        try {
+            authPage.waitForModalToOpen();
+        } catch (Throwable retry) {
+            log.info("Модалка не открылась с первого клика (оверлей/JS-гонка) — кликаю по «Войти» повторно");
+            authPage.clickLoginInHeader();
+            authPage.waitForModalToOpen();
+        }
     }
 
     @Step("Заполнить форму: Email={email}, Password=***")

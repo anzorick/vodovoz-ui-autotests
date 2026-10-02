@@ -21,6 +21,7 @@ public abstract class BaseTest {
 
     @BeforeEach
     void setUp(TestInfo testInfo) {
+        com.codeborne.selenide.Configuration.pageLoadTimeout = 90_000; // рендерер-таймауты на нагруженных раннерах перестанут ломать тесты
         log.info("=== Starting test: {} ===", testInfo.getDisplayName());
 
         String  browser  = com.automation.config.Configuration.browser();
