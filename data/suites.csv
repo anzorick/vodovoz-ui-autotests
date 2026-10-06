@@ -1,69 +1,17 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Mon Oct 05 11:49:15 UTC 2026","Mon Oct 05 11:49:26 UTC 2026","11014","","Поиск: автоподсказки","","com.automation.tests.SearchAutosuggestTest","testAutosuggestShowsRelevantSuggestionsAndNavigates","Автоподсказки показываются и клик открывает карточку товара","E2E: open / -> type partial query (search.query.partial) -> div.title-search-result visible, a.bx_item_block links visible -> first suggestion relevant -> click -> product card opened (URL contains /catalog/). Gracefully skipped in headless mode (server blocks suggest AJAX)."
-"passed","Mon Oct 05 11:48:34 UTC 2026","Mon Oct 05 11:48:46 UTC 2026","11351","","Сортировка товаров в каталоге","","com.automation.tests.CatalogSortTest","testSortByPriceDescending","Сортировка 'Дороже': первый товар дороже последнего","Шаги:
-1. Открыть раздел каталога (питьевая вода 19 л)
-2. Применить сортировку «Дороже» (order=desc)
-3. Проверить что цены идут по убыванию (first ≥ last)
-4. Проверить наличие товаров
+"passed","Tue Oct 06 07:12:33 UTC 2026","Tue Oct 06 07:13:07 UTC 2026","34033","","Добавление товара в избранное","","com.automation.tests.AddToFavoritesTest","testRemoveFromFavorites","Удаление товара из избранного (гостевой режим)","Поиск -> добавить в избранное -> открыть избранное -> удалить первый товар -> товар исчез из списка"
+"passed","Tue Oct 06 07:03:56 UTC 2026","Tue Oct 06 07:04:10 UTC 2026","14385","","Сравнение товаров","","com.automation.tests.ProductCompareTest","testCompareFourProducts","Добавить 4 товара в сравнение, проверить таблицу, удалить один","E2E: open catalog -> add 4 products to compare -> go to compare page -> check 4 columns -> attribute row present -> remove first -> 3 remain"
+"passed","Tue Oct 06 07:06:03 UTC 2026","Tue Oct 06 07:06:30 UTC 2026","27060","","Корзина: изменение количества и удаление товара","","com.automation.tests.CartQuantityTest","testRemoveItemFromCart","2. Удаление товара из корзины","Шаги:
+1. Добавить товар в корзину (предусловие)
+2. Нажать кнопку удаления товара
+3. Проверить что корзина опустела
 "
-"passed","Mon Oct 05 11:56:18 UTC 2026","Mon Oct 05 11:56:38 UTC 2026","20648","","E2E: Поиск → Корзина","","com.automation.tests.AddToCartTest","testSearchAndAddToCart","E2E: Поиск → В корзину → Корзина содержит товар E2E корзина: товар по запросу 'кулер'","E2E-сценарий (параметризован по поисковому запросу):
-1. Открыть главную страницу vodovoz.ru
-2. Ввести в строку поиска переданный query
-3. Дождаться результатов (не менее 1 товара)
-4. Запомнить название первого товара
-5. Нажать кнопку «В корзину» первого товара
-6. Убедиться что счётчик корзины в шапке стал > 0
-7. Открыть страницу корзины /basket/
-8. Проверить, что корзина не пуста
-9. Проверить, что добавленный товар присутствует в корзине
+"passed","Tue Oct 06 07:11:45 UTC 2026","Tue Oct 06 07:11:51 UTC 2026","6942","","Мобильный smoke","","com.automation.tests.MobileSmokeTest","testMobileSearchWorks","Mobile search results page shows products","Navigate directly to /search/?q=<query> at mobile viewport -> product cards visible.
+NOTE: #title-search-input is CSS-hidden at Chrome headless 500px viewport (collapsed
+mobile header state). Testing via URL navigation is equivalent — it validates that the
+mobile search results page renders correctly with product cards.
 "
-"passed","Mon Oct 05 11:48:26 UTC 2026","Mon Oct 05 11:48:34 UTC 2026","8452","","Форма «Написать отзыв» — негативные тесты","","com.automation.tests.FeedbackFormTest","testEmptyFeedbackFormShowsValidation","Пустая форма отзыва показывает ошибки валидации","1. Открыть /reviews/
-2. Нажать «Написать отзыв» → модалка id=12
-3. Активировать чекбокс согласия (иначе Submit disabled)
-4. Отправить без заполнения полей
-5. Проверить label.error (Рейтинг, Имя, Email, Текст — required)
-"
-"passed","Mon Oct 05 11:54:45 UTC 2026","Mon Oct 05 11:54:50 UTC 2026","5270","","Мобильный smoke","","com.automation.tests.MobileSmokeTest","testMobileProductCardReadable","Mobile product card shows name, price, add-to-cart","Open catalog -> click first product title -> name, price, basket button visible"
-"passed","Mon Oct 05 11:48:46 UTC 2026","Mon Oct 05 11:48:58 UTC 2026","12560","","Сортировка товаров в каталоге","","com.automation.tests.CatalogSortTest","testSortByPriceAscending","Сортировка 'Дешевле': первый товар дешевле последнего","Шаги:
-1. Открыть раздел каталога (питьевая вода 19 л)
-2. Применить сортировку «Дешевле» (order=asc)
-3. Проверить что цены идут по возрастанию (first ≤ last)
-4. Проверить наличие товаров
-"
-"passed","Mon Oct 05 11:54:25 UTC 2026","Mon Oct 05 11:54:33 UTC 2026","8484","","Фильтрация товаров в каталоге","","com.automation.tests.CatalogFiltersTest","testSingleUseTareFilter","Chip-фильтр 'В одноразовой таре': URL обновился, товары видны","Шаги:
-1. Открыть раздел «Питьевая вода 19 литров»
-2. Перейти по URL подраздела «В одноразовой таре»
-3. Проверить что URL содержит слаг подраздела
-4. Проверить что chip-кнопки видимы на новой странице
-5. Проверить что список товаров не пуст
-"
-"passed","Mon Oct 05 11:55:58 UTC 2026","Mon Oct 05 11:56:18 UTC 2026","19862","","E2E: Поиск → Корзина","","com.automation.tests.AddToCartTest","testSearchAndAddToCart","E2E: Поиск → В корзину → Корзина содержит товар E2E корзина: товар по запросу 'вода питьевая'","E2E-сценарий (параметризован по поисковому запросу):
-1. Открыть главную страницу vodovoz.ru
-2. Ввести в строку поиска переданный query
-3. Дождаться результатов (не менее 1 товара)
-4. Запомнить название первого товара
-5. Нажать кнопку «В корзину» первого товара
-6. Убедиться что счётчик корзины в шапке стал > 0
-7. Открыть страницу корзины /basket/
-8. Проверить, что корзина не пуста
-9. Проверить, что добавленный товар присутствует в корзине
-"
-"passed","Mon Oct 05 11:52:44 UTC 2026","Mon Oct 05 11:53:03 UTC 2026","19855","","Карточка товара (PDP)","","com.automation.tests.ProductCardTest","testAddToCartFromProductCard","Добавление товара в корзину из карточки с проверкой динамического счетчика","Открытие карточки кулера -> клик 'В корзину' -> проверка появления счетчика количества"
-"passed","Mon Oct 05 11:52:01 UTC 2026","Mon Oct 05 11:52:16 UTC 2026","15781","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testSearchForWaterReturnsProducts","Поиск 'вода' возвращает товары с водой","Шаги:
-1. Открыть главную страницу vodovoz.ru
-2. Ввести в строку поиска: вода
-3. Нажать кнопку поиска
-4. Проверить, что URL содержит параметр q=
-5. Проверить, что найдено не менее 5 товаров
-6. Проверить, что хотя бы один товар содержит 'вода' в названии
-"
-"passed","Mon Oct 05 11:50:13 UTC 2026","Mon Oct 05 11:50:31 UTC 2026","17666","","Корзина: изменение количества и удаление товара","","com.automation.tests.CartQuantityTest","testCartContainsProductWithPrice","3. Корзина содержит добавленный товар с ценой","Шаги:
-1. Добавить товар (предусловие)
-2. Проверить что корзина не пустая
-3. Проверить что итоговая сумма > 0
-4. Проверить кнопку «Оформить заказ»
-"
-"passed","Mon Oct 05 11:50:31 UTC 2026","Mon Oct 05 11:50:45 UTC 2026","13991","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testGarbageQueryShowsEmptyOrRecommendations","Поиск бессмысленного запроса не вызывает ошибку страницы","Сценарий (негативный):
+"passed","Tue Oct 06 07:06:51 UTC 2026","Tue Oct 06 07:07:07 UTC 2026","15805","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testGarbageQueryShowsEmptyOrRecommendations","Поиск бессмысленного запроса не вызывает ошибку страницы","Сценарий (негативный):
 1. Открыть главную страницу vodovoz.ru
 2. Ввести в строку поиска заведомо бессмысленный запрос
    (значение берётся из config.properties: search.query.garbage)
@@ -72,11 +20,57 @@
 5. Проверить: страница не упала с ошибкой 500/404 —
    блок .catalog-items видим (сайт показывает рекомендации)
 "
-"passed","Mon Oct 05 11:53:36 UTC 2026","Mon Oct 05 11:53:57 UTC 2026","20977","","Корзина: пересчёт суммы","","com.automation.tests.CartPriceTest","testInvalidPromoCodeShowsError","2. Неверный промокод показывает ошибку и не меняет сумму","Негативный тест: ввести невалидный промокод -> блок ошибки -> Grand Total не изменился."
-"passed","Mon Oct 05 11:48:58 UTC 2026","Mon Oct 05 11:49:15 UTC 2026","17032","","Сортировка товаров в каталоге","","com.automation.tests.CatalogSortTest","testSortByDiscountAndRatingShowsProducts","Каталог отображает товары после сортировки по скидке и рейтингу","Проверяет что после сортировки «Со скидкой» и «Высокий рейтинг»
-каталог остаётся рабочим и содержит товары.
+"passed","Tue Oct 06 07:05:37 UTC 2026","Tue Oct 06 07:06:03 UTC 2026","26218","","Корзина: изменение количества и удаление товара","","com.automation.tests.CartQuantityTest","testIncreaseQuantityUpdatesTotal","1. Увеличение количества товара через кнопку '+'","Шаги:
+1. Добавить товар в корзину (предусловие)
+2. Запомнить итоговую сумму до изменения
+3. Нажать '+' для увеличения количества
+4. Проверить что товаров стало 2
 "
-"passed","Mon Oct 05 11:52:25 UTC 2026","Mon Oct 05 11:52:44 UTC 2026","18712","","Авторизация по Email","","com.automation.tests.LoginByEmailTest","testLoginWithInvalidEmailShowsError","Вход с неверным Email → проверка сообщения об ошибке","Негативный E2E-сценарий:
+"passed","Tue Oct 06 07:07:07 UTC 2026","Tue Oct 06 07:07:23 UTC 2026","16643","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testParametrizedSearch","Параметризованный поиск по различным запросам Прогон 1: Поиск по запросу 'вода', ожидаем не менее 5 товаров","Параметризованный тест с @CsvSource.
+Для каждого запроса проверяем:
+1. Страница каталога открылась (/catalog/ в URL)
+2. Количество товаров ≥ указанного минимума
+3. Хотя бы один товар содержит поисковое слово в названии
+"
+"passed","Tue Oct 06 07:07:58 UTC 2026","Tue Oct 06 07:08:13 UTC 2026","15768","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testParametrizedSearch","Параметризованный поиск по различным запросам Прогон 4: Поиск по запросу 'лимонад', ожидаем не менее 2 товаров","Параметризованный тест с @CsvSource.
+Для каждого запроса проверяем:
+1. Страница каталога открылась (/catalog/ в URL)
+2. Количество товаров ≥ указанного минимума
+3. Хотя бы один товар содержит поисковое слово в названии
+"
+"passed","Tue Oct 06 07:13:07 UTC 2026","Tue Oct 06 07:13:31 UTC 2026","23735","","Добавление товара в избранное","","com.automation.tests.AddToFavoritesTest","testAddToFavoritesAsGuest","Поиск 'кулер' → В избранное → Проверка страницы избранного","E2E-сценарий (гостевой режим):
+1. Открыть главную vodovoz.ru
+2. Поиск «кулер»
+3. Запомнить название первого товара
+4. Нажать «В избранное» (кнопка-сердечко)
+5. Перейти на страницу /personal/favorite/
+6. Если редирект на логин — тест фиксирует это как ожидаемое поведение
+7. Если страница избранного открылась — проверяем наличие товара
+"
+"passed","Tue Oct 06 07:11:35 UTC 2026","Tue Oct 06 07:11:45 UTC 2026","9622","","Фильтрация товаров в каталоге","","com.automation.tests.CatalogFiltersTest","testSingleUseTareFilter","Chip-фильтр 'В одноразовой таре': URL обновился, товары видны","Шаги:
+1. Открыть раздел «Питьевая вода 19 литров»
+2. Перейти по URL подраздела «В одноразовой таре»
+3. Проверить что URL содержит слаг подраздела
+4. Проверить что chip-кнопки видимы на новой странице
+5. Проверить что список товаров не пуст
+"
+"skipped","Tue Oct 06 07:08:49 UTC 2026","Tue Oct 06 07:08:59 UTC 2026","10244","","Авторизация по Email","","com.automation.tests.LoginByEmailTest","testLoginWithValidCredentials","Успешная авторизация по Email и паролю","Открыть модалку -> войти через почту -> ввести валидные креды -> согласие -> войти -> модалка закрыта, шапка авторизована, /personal/ открывается без редиректа на вход"
+"passed","Tue Oct 06 07:12:07 UTC 2026","Tue Oct 06 07:12:33 UTC 2026","25898","","Мобильный smoke","","com.automation.tests.MobileSmokeTest","testMobileBurgerMenuOpensAndNavigates","Mobile burger menu opens with navigation links","Click burger -> #mobilemenu.show -> links present -> click first -> catalog loads"
+"passed","Tue Oct 06 07:13:53 UTC 2026","Tue Oct 06 07:14:18 UTC 2026","24701","","E2E: Поиск → Корзина","","com.automation.tests.AddToCartTest","testSearchAndAddToCart","E2E: Поиск → В корзину → Корзина содержит товар E2E корзина: товар по запросу 'кулер'","E2E-сценарий (параметризован по поисковому запросу):
+1. Открыть главную страницу vodovoz.ru
+2. Ввести в строку поиска переданный query
+3. Дождаться результатов (не менее 1 товара)
+4. Запомнить название первого товара
+5. Нажать кнопку «В корзину» первого товара
+6. Убедиться что счётчик корзины в шапке стал > 0
+7. Открыть страницу корзины /basket/
+8. Проверить, что корзина не пуста
+9. Проверить, что добавленный товар присутствует в корзине
+"
+"passed","Tue Oct 06 07:09:26 UTC 2026","Tue Oct 06 07:09:48 UTC 2026","22202","","Карточка товара (PDP)","","com.automation.tests.ProductCardTest","testAddToCartFromProductCard","Добавление товара в корзину из карточки с проверкой динамического счетчика","Открытие карточки кулера -> клик 'В корзину' -> проверка появления счетчика количества"
+"passed","Tue Oct 06 07:03:45 UTC 2026","Tue Oct 06 07:03:56 UTC 2026","10676","","Сервисные формы: заказ звонка","","com.automation.tests.CallbackFormTest","testEmptyCallbackFormShowsValidation","Отправка пустой формы показывает ошибки валидации","Открытие модалки заказа звонка -> отправка пустой формы -> проверка ошибок валидации"
+"passed","Tue Oct 06 07:10:29 UTC 2026","Tue Oct 06 07:11:01 UTC 2026","32239","","Корзина: пересчёт суммы","","com.automation.tests.CartPriceTest","testInvalidPromoCodeShowsError","2. Неверный промокод показывает ошибку и не меняет сумму","Негативный тест: ввести невалидный промокод -> блок ошибки -> Grand Total не изменился."
+"passed","Tue Oct 06 07:08:59 UTC 2026","Tue Oct 06 07:09:26 UTC 2026","27023","","Авторизация по Email","","com.automation.tests.LoginByEmailTest","testLoginWithInvalidEmailShowsError","Вход с неверным Email → проверка сообщения об ошибке","Негативный E2E-сценарий:
 1. Открыть главную страницу vodovoz.ru
 2. Нажать кнопку «Войти» в шапке сайта
 3. Дождаться открытия модального окна авторизации
@@ -87,29 +81,74 @@
 8. Нажать кнопку «Войти»
 9. Проверить, что отображается сообщение об ошибке авторизации
 "
-"passed","Mon Oct 05 11:47:54 UTC 2026","Mon Oct 05 11:48:03 UTC 2026","9506","","Сервисные формы: заказ звонка","","com.automation.tests.CallbackFormTest","testEmptyCallbackFormShowsValidation","Отправка пустой формы показывает ошибки валидации","Открытие модалки заказа звонка -> отправка пустой формы -> проверка ошибок валидации"
-"passed","Mon Oct 05 11:51:31 UTC 2026","Mon Oct 05 11:51:45 UTC 2026","14038","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testParametrizedSearch","Параметризованный поиск по различным запросам Прогон 4: Поиск по запросу 'лимонад', ожидаем не менее 2 товаров","Параметризованный тест с @CsvSource.
+"passed","Tue Oct 06 07:05:23 UTC 2026","Tue Oct 06 07:05:37 UTC 2026","13489","","Поиск: автоподсказки","","com.automation.tests.SearchAutosuggestTest","testAutosuggestShowsRelevantSuggestionsAndNavigates","Автоподсказки показываются и клик открывает карточку товара","E2E: open / -> type partial query (search.query.partial) -> div.title-search-result visible, a.bx_item_block links visible -> first suggestion relevant -> click -> product card opened (URL contains /catalog/). Gracefully skipped in headless mode (server blocks suggest AJAX)."
+"passed","Tue Oct 06 07:07:23 UTC 2026","Tue Oct 06 07:07:41 UTC 2026","17712","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testParametrizedSearch","Параметризованный поиск по различным запросам Прогон 2: Поиск по запросу 'кулер', ожидаем не менее 1 товаров","Параметризованный тест с @CsvSource.
 Для каждого запроса проверяем:
 1. Страница каталога открылась (/catalog/ в URL)
 2. Количество товаров ≥ указанного минимума
 3. Хотя бы один товар содержит поисковое слово в названии
 "
-"passed","Mon Oct 05 11:53:03 UTC 2026","Mon Oct 05 11:53:19 UTC 2026","15613","","Карточка товара (PDP)","","com.automation.tests.ProductCardTest","testProductReviewsTabOpens","Открытие таба 'Отзывы' на карточке товара","Поиск -> открытие карточки первого товара -> клик по табу 'Отзывы' -> блок отзывов загружен"
-"passed","Mon Oct 05 11:54:33 UTC 2026","Mon Oct 05 11:54:37 UTC 2026","4252","","Мобильный smoke","","com.automation.tests.MobileSmokeTest","testMobileSearchWorks","Mobile search results page shows products","Navigate directly to /search/?q=<query> at mobile viewport -> product cards visible.
-NOTE: #title-search-input is CSS-hidden at Chrome headless 500px viewport (collapsed
-mobile header state). Testing via URL navigation is equivalent — it validates that the
-mobile search results page renders correctly with product cards.
+"passed","Tue Oct 06 07:13:31 UTC 2026","Tue Oct 06 07:13:53 UTC 2026","22600","","E2E: Поиск → Корзина","","com.automation.tests.AddToCartTest","testSearchAndAddToCart","E2E: Поиск → В корзину → Корзина содержит товар E2E корзина: товар по запросу 'вода питьевая'","E2E-сценарий (параметризован по поисковому запросу):
+1. Открыть главную страницу vodovoz.ru
+2. Ввести в строку поиска переданный query
+3. Дождаться результатов (не менее 1 товара)
+4. Запомнить название первого товара
+5. Нажать кнопку «В корзину» первого товара
+6. Убедиться что счётчик корзины в шапке стал > 0
+7. Открыть страницу корзины /basket/
+8. Проверить, что корзина не пуста
+9. Проверить, что добавленный товар присутствует в корзине
 "
-"passed","Mon Oct 05 11:54:37 UTC 2026","Mon Oct 05 11:54:45 UTC 2026","7434","","Мобильный smoke","","com.automation.tests.MobileSmokeTest","testMobileHomePageLoads","Mobile home page loads and burger button is visible","Open / at mobile viewport -> body loaded -> burger button visible.
+"passed","Tue Oct 06 07:12:01 UTC 2026","Tue Oct 06 07:12:07 UTC 2026","6512","","Мобильный smoke","","com.automation.tests.MobileSmokeTest","testMobileProductCardReadable","Mobile product card shows name, price, add-to-cart","Open catalog -> click first product title -> name, price, basket button visible"
+"passed","Tue Oct 06 07:11:01 UTC 2026","Tue Oct 06 07:11:25 UTC 2026","23336","","Корзина: пересчёт суммы","","com.automation.tests.CartPriceTest","testCartTotalRecalculatesOnQuantityChange","1. AJAX-пересчёт итоговой суммы при изменении количества товара","E2E: qty=1 -> запомнить P и Total. '+' -> qty=2 И Total=P*2. '-' -> qty=1 И Total=P."
+"passed","Tue Oct 06 07:11:25 UTC 2026","Tue Oct 06 07:11:35 UTC 2026","10193","","Фильтрация товаров в каталоге","","com.automation.tests.CatalogFiltersTest","testReusableTareFilter","Chip-фильтр 'В многоразовой таре': URL обновился, товары видны","Шаги:
+1. Открыть раздел «Питьевая вода 19 литров»
+2. Перейти по URL подраздела «В многоразовой таре»
+3. Проверить что URL содержит слаг подраздела
+4. Проверить что chip-кнопки видимы (навигация присутствует)
+5. Проверить что список товаров не пуст
+"
+"passed","Tue Oct 06 07:04:10 UTC 2026","Tue Oct 06 07:04:20 UTC 2026","9667","","Форма «Написать отзыв» — негативные тесты","","com.automation.tests.FeedbackFormTest","testPartialFeedbackFormShowsValidation","Форма с именем без рейтинга и текста показывает ошибки валидации","1. Открыть /reviews/
+2. Нажать «Написать отзыв» → модалка
+3. Ввести только имя «Тест Авто»
+4. Отправить без рейтинга, email и текста
+5. Проверить label.error (Рейтинг, Email, Текст — обязательны)
+"
+"passed","Tue Oct 06 07:04:20 UTC 2026","Tue Oct 06 07:04:30 UTC 2026","9735","","Форма «Написать отзыв» — негативные тесты","","com.automation.tests.FeedbackFormTest","testEmptyFeedbackFormShowsValidation","Пустая форма отзыва показывает ошибки валидации","1. Открыть /reviews/
+2. Нажать «Написать отзыв» → модалка id=12
+3. Активировать чекбокс согласия (иначе Submit disabled)
+4. Отправить без заполнения полей
+5. Проверить label.error (Рейтинг, Имя, Email, Текст — required)
+"
+"passed","Tue Oct 06 07:09:48 UTC 2026","Tue Oct 06 07:10:08 UTC 2026","19961","","Карточка товара (PDP)","","com.automation.tests.ProductCardTest","testProductReviewsTabOpens","Открытие таба 'Отзывы' на карточке товара","Поиск -> открытие карточки первого товара -> клик по табу 'Отзывы' -> блок отзывов загружен"
+"passed","Tue Oct 06 07:06:30 UTC 2026","Tue Oct 06 07:06:51 UTC 2026","20483","","Корзина: изменение количества и удаление товара","","com.automation.tests.CartQuantityTest","testCartContainsProductWithPrice","3. Корзина содержит добавленный товар с ценой","Шаги:
+1. Добавить товар (предусловие)
+2. Проверить что корзина не пустая
+3. Проверить что итоговая сумма > 0
+4. Проверить кнопку «Оформить заказ»
+"
+"passed","Tue Oct 06 07:04:30 UTC 2026","Tue Oct 06 07:04:47 UTC 2026","16688","","Сортировка товаров в каталоге","","com.automation.tests.CatalogSortTest","testSortByPriceDescending","Сортировка 'Дороже': первый товар дороже последнего","Шаги:
+1. Открыть раздел каталога (питьевая вода 19 л)
+2. Применить сортировку «Дороже» (order=desc)
+3. Проверить что цены идут по убыванию (first ≥ last)
+4. Проверить наличие товаров
+"
+"passed","Tue Oct 06 07:07:41 UTC 2026","Tue Oct 06 07:07:58 UTC 2026","16572","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testParametrizedSearch","Параметризованный поиск по различным запросам Прогон 3: Поиск по запросу 'помпа', ожидаем не менее 3 товаров","Параметризованный тест с @CsvSource.
+Для каждого запроса проверяем:
+1. Страница каталога открылась (/catalog/ в URL)
+2. Количество товаров ≥ указанного минимума
+3. Хотя бы один товар содержит поисковое слово в названии
+"
+"passed","Tue Oct 06 07:11:51 UTC 2026","Tue Oct 06 07:12:01 UTC 2026","9196","","Мобильный smoke","","com.automation.tests.MobileSmokeTest","testMobileHomePageLoads","Mobile home page loads and burger button is visible","Open / at mobile viewport -> body loaded -> burger button visible.
 NOTE: div.header-cart is CSS-hidden at Chrome headless 500px (the minimum headless
 window width that Chrome enforces regardless of --window-size=375,667). The cart
 icon uses a breakpoint that is visible at 375px non-headless but not at 500px headless.
 Burger is the definitive mobile indicator — it appears at any width <= 1200px.
 "
-"passed","Mon Oct 05 11:48:03 UTC 2026","Mon Oct 05 11:48:17 UTC 2026","13879","","Сравнение товаров","","com.automation.tests.ProductCompareTest","testCompareFourProducts","Добавить 4 товара в сравнение, проверить таблицу, удалить один","E2E: open catalog -> add 4 products to compare -> go to compare page -> check 4 columns -> attribute row present -> remove first -> 3 remain"
-"passed","Mon Oct 05 11:53:19 UTC 2026","Mon Oct 05 11:53:36 UTC 2026","16705","","Карточка товара (PDP)","","com.automation.tests.ProductCardTest","testProductCardDisplaysCoreInfo","Проверка ключевых атрибутов карточки: название, цена, характеристики","Поиск товара -> переход в карточку по ссылке -> сверка H1, цены и блока деталей"
-"passed","Mon Oct 05 11:53:57 UTC 2026","Mon Oct 05 11:54:17 UTC 2026","20221","","Корзина: пересчёт суммы","","com.automation.tests.CartPriceTest","testCartTotalRecalculatesOnQuantityChange","1. AJAX-пересчёт итоговой суммы при изменении количества товара","E2E: qty=1 -> запомнить P и Total. '+' -> qty=2 И Total=P*2. '-' -> qty=1 И Total=P."
-"passed","Mon Oct 05 11:51:45 UTC 2026","Mon Oct 05 11:52:01 UTC 2026","15555","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testSearchForCoolerReturnsResults","Поиск 'кулер' возвращает страницу каталога с результатами","Шаги:
+"passed","Tue Oct 06 07:05:02 UTC 2026","Tue Oct 06 07:05:23 UTC 2026","21834","","Сортировка товаров в каталоге","","com.automation.tests.CatalogSortTest","testSortByDiscountAndRatingShowsProducts","Каталог отображает товары после сортировки по скидке и рейтингу","Проверяет что после сортировки «Со скидкой» и «Высокий рейтинг»
+каталог остаётся рабочим и содержит товары.
+"
+"passed","Tue Oct 06 07:08:13 UTC 2026","Tue Oct 06 07:08:32 UTC 2026","18189","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testSearchForCoolerReturnsResults","Поиск 'кулер' возвращает страницу каталога с результатами","Шаги:
 1. Открыть главную страницу vodovoz.ru
 2. Ввести в строку поиска: кулер
 3. Нажать кнопку поиска
@@ -117,58 +156,19 @@ Burger is the definitive mobile indicator — it appears at any width <= 1200px.
 5. Проверить, что URL содержит параметр поиска q=
 6. Проверить, что найден хотя бы 1 товар
 "
-"passed","Mon Oct 05 11:55:11 UTC 2026","Mon Oct 05 11:55:37 UTC 2026","25534","","Добавление товара в избранное","","com.automation.tests.AddToFavoritesTest","testRemoveFromFavorites","Удаление товара из избранного (гостевой режим)","Поиск -> добавить в избранное -> открыть избранное -> удалить первый товар -> товар исчез из списка"
-"passed","Mon Oct 05 11:55:37 UTC 2026","Mon Oct 05 11:55:58 UTC 2026","20886","","Добавление товара в избранное","","com.automation.tests.AddToFavoritesTest","testAddToFavoritesAsGuest","Поиск 'кулер' → В избранное → Проверка страницы избранного","E2E-сценарий (гостевой режим):
-1. Открыть главную vodovoz.ru
-2. Поиск «кулер»
-3. Запомнить название первого товара
-4. Нажать «В избранное» (кнопка-сердечко)
-5. Перейти на страницу /personal/favorite/
-6. Если редирект на логин — тест фиксирует это как ожидаемое поведение
-7. Если страница избранного открылась — проверяем наличие товара
+"passed","Tue Oct 06 07:03:22 UTC 2026","Tue Oct 06 07:03:45 UTC 2026","23652","","Сервисные формы: заказ звонка","","com.automation.tests.CallbackFormTest","testWrongCaptchaRejectsSubmission","Форма не отправляется с неверным кодом защиты (капчей)","Имя + телефон из 10 цифр, начинающийся с 9 + код капчи 12345 -> отправка -> запрос отклонён, модалка осталась открытой"
+"passed","Tue Oct 06 07:04:47 UTC 2026","Tue Oct 06 07:05:02 UTC 2026","15098","","Сортировка товаров в каталоге","","com.automation.tests.CatalogSortTest","testSortByPriceAscending","Сортировка 'Дешевле': первый товар дешевле последнего","Шаги:
+1. Открыть раздел каталога (питьевая вода 19 л)
+2. Применить сортировку «Дешевле» (order=asc)
+3. Проверить что цены идут по возрастанию (first ≤ last)
+4. Проверить наличие товаров
 "
-"passed","Mon Oct 05 11:54:50 UTC 2026","Mon Oct 05 11:55:11 UTC 2026","21213","","Мобильный smoke","","com.automation.tests.MobileSmokeTest","testMobileBurgerMenuOpensAndNavigates","Mobile burger menu opens with navigation links","Click burger -> #mobilemenu.show -> links present -> click first -> catalog loads"
-"passed","Mon Oct 05 11:51:17 UTC 2026","Mon Oct 05 11:51:31 UTC 2026","14496","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testParametrizedSearch","Параметризованный поиск по различным запросам Прогон 3: Поиск по запросу 'помпа', ожидаем не менее 3 товаров","Параметризованный тест с @CsvSource.
-Для каждого запроса проверяем:
-1. Страница каталога открылась (/catalog/ в URL)
-2. Количество товаров ≥ указанного минимума
-3. Хотя бы один товар содержит поисковое слово в названии
-"
-"passed","Mon Oct 05 11:51:00 UTC 2026","Mon Oct 05 11:51:17 UTC 2026","16982","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testParametrizedSearch","Параметризованный поиск по различным запросам Прогон 2: Поиск по запросу 'кулер', ожидаем не менее 1 товаров","Параметризованный тест с @CsvSource.
-Для каждого запроса проверяем:
-1. Страница каталога открылась (/catalog/ в URL)
-2. Количество товаров ≥ указанного минимума
-3. Хотя бы один товар содержит поисковое слово в названии
-"
-"passed","Mon Oct 05 11:48:17 UTC 2026","Mon Oct 05 11:48:26 UTC 2026","8622","","Форма «Написать отзыв» — негативные тесты","","com.automation.tests.FeedbackFormTest","testPartialFeedbackFormShowsValidation","Форма с именем без рейтинга и текста показывает ошибки валидации","1. Открыть /reviews/
-2. Нажать «Написать отзыв» → модалка
-3. Ввести только имя «Тест Авто»
-4. Отправить без рейтинга, email и текста
-5. Проверить label.error (Рейтинг, Email, Текст — обязательны)
-"
-"passed","Mon Oct 05 11:49:26 UTC 2026","Mon Oct 05 11:49:49 UTC 2026","22760","","Корзина: изменение количества и удаление товара","","com.automation.tests.CartQuantityTest","testIncreaseQuantityUpdatesTotal","1. Увеличение количества товара через кнопку '+'","Шаги:
-1. Добавить товар в корзину (предусловие)
-2. Запомнить итоговую сумму до изменения
-3. Нажать '+' для увеличения количества
-4. Проверить что товаров стало 2
-"
-"skipped","Mon Oct 05 11:52:16 UTC 2026","Mon Oct 05 11:52:25 UTC 2026","8405","","Авторизация по Email","","com.automation.tests.LoginByEmailTest","testLoginWithValidCredentials","Успешная авторизация по Email и паролю","Открыть модалку -> войти через почту -> ввести валидные креды -> согласие -> войти -> модалка закрыта, шапка авторизована, /personal/ открывается без редиректа на вход"
-"passed","Mon Oct 05 11:49:49 UTC 2026","Mon Oct 05 11:50:13 UTC 2026","24448","","Корзина: изменение количества и удаление товара","","com.automation.tests.CartQuantityTest","testRemoveItemFromCart","2. Удаление товара из корзины","Шаги:
-1. Добавить товар в корзину (предусловие)
-2. Нажать кнопку удаления товара
-3. Проверить что корзина опустела
-"
-"passed","Mon Oct 05 11:50:45 UTC 2026","Mon Oct 05 11:51:00 UTC 2026","14443","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testParametrizedSearch","Параметризованный поиск по различным запросам Прогон 1: Поиск по запросу 'вода', ожидаем не менее 5 товаров","Параметризованный тест с @CsvSource.
-Для каждого запроса проверяем:
-1. Страница каталога открылась (/catalog/ в URL)
-2. Количество товаров ≥ указанного минимума
-3. Хотя бы один товар содержит поисковое слово в названии
-"
-"passed","Mon Oct 05 11:47:29 UTC 2026","Mon Oct 05 11:47:54 UTC 2026","24763","","Сервисные формы: заказ звонка","","com.automation.tests.CallbackFormTest","testWrongCaptchaRejectsSubmission","Форма не отправляется с неверным кодом защиты (капчей)","Имя + телефон из 10 цифр, начинающийся с 9 + код капчи 12345 -> отправка -> запрос отклонён, модалка осталась открытой"
-"passed","Mon Oct 05 11:54:17 UTC 2026","Mon Oct 05 11:54:25 UTC 2026","7703","","Фильтрация товаров в каталоге","","com.automation.tests.CatalogFiltersTest","testReusableTareFilter","Chip-фильтр 'В многоразовой таре': URL обновился, товары видны","Шаги:
-1. Открыть раздел «Питьевая вода 19 литров»
-2. Перейти по URL подраздела «В многоразовой таре»
-3. Проверить что URL содержит слаг подраздела
-4. Проверить что chip-кнопки видимы (навигация присутствует)
-5. Проверить что список товаров не пуст
+"passed","Tue Oct 06 07:10:08 UTC 2026","Tue Oct 06 07:10:29 UTC 2026","20667","","Карточка товара (PDP)","","com.automation.tests.ProductCardTest","testProductCardDisplaysCoreInfo","Проверка ключевых атрибутов карточки: название, цена, характеристики","Поиск товара -> переход в карточку по ссылке -> сверка H1, цены и блока деталей"
+"passed","Tue Oct 06 07:08:32 UTC 2026","Tue Oct 06 07:08:49 UTC 2026","17457","","Поиск на vodovoz.ru","","com.automation.tests.VodovozSearchTest","testSearchForWaterReturnsProducts","Поиск 'вода' возвращает товары с водой","Шаги:
+1. Открыть главную страницу vodovoz.ru
+2. Ввести в строку поиска: вода
+3. Нажать кнопку поиска
+4. Проверить, что URL содержит параметр q=
+5. Проверить, что найдено не менее 5 товаров
+6. Проверить, что хотя бы один товар содержит 'вода' в названии
 "
