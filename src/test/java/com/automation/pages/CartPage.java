@@ -550,5 +550,48 @@ public class CartPage extends BasePage {
         log.info("Сообщение об ошибке промокода видимо ✓");
         return this;
     }
+    // ——— Промокод: позитивный сценарий ———
+
+    @Step("Получить сумму товаров до скидки")
+    public double getProductsTotal() {
+        String raw = $(".basket-checkout-total")
+                .shouldBe(Condition.visible, java.time.Duration.ofSeconds(10))
+                .getText().trim();
+        return parseMoney(raw);
+    }
+
+    @Step("Ввести промокод: {code}")
+    public CartPage enterPromoCode(String code) {
+        $("[data-entity='basket-coupon-input']")
+                .shouldBe(Condition.visible, java.time.Duration.ofSeconds(10))
+                .setValue(code);
+        return this;
+    }
+
+    @Step("Нажать кнопку «Применить» промокод")
+    public CartPage clickApplyPromo() {
+        $(".basket-coupon-block-coupon-btn")
+                .shouldBe(Condition.visible, java.time.Duration.ofSeconds(10))
+                .click();
+        return this;
+    }
+
+    @Step("Проверить, что промокод применён (появился класс has_coupon)")
+    public CartPage promoShouldBeApplied() {
+        $(".basket-coupon-alert-inner.has_coupon")
+                .shouldBe(Condition.visible, java.time.Duration.ofSeconds(10));
+        return this;
+    }
+
+    @Step("Получить текст скидки (например, '-638 ₽')")
+    public String getDiscountText() {
+        return $(".basket-coupon-info")
+                .shouldBe(Condition.visible, java.time.Duration.ofSeconds(10))
+                .getText().trim();
+    }
+
+    private double parseMoney(String raw) {
+        String digits = raw.replaceAll("[^0-9.,]", "").replace(",", ".");
+        return Double.parseDouble(digits);
+    }
 }
-
