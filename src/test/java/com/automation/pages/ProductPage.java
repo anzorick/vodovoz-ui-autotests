@@ -259,4 +259,36 @@ public class ProductPage extends BasePage {
                 .shouldBe(visible, Duration.ofSeconds(10));
         return this;
     }
+    // ——— Галерея Fancybox (верифицировано инспекцией: FancyBox 3, дефис) ———
+
+    @Step("Есть ли на карточке триггер галереи [data-fancybox]")
+    public boolean hasGalleryTrigger() {
+        return $("[data-fancybox]").is(Condition.visible, java.time.Duration.ofSeconds(3));
+    }
+
+    @Step("Открыть лайтбокс галереи кликом по первой миниатюре")
+    public ProductPage openGalleryLightbox() {
+        $("[data-fancybox]").scrollIntoView("{block: 'center'}").click();
+        return this;
+    }
+
+    @Step("Лайтбокс открыт: контейнер видим и имеет класс fancybox-is-open")
+    public ProductPage galleryLightboxShouldBeOpen() {
+        $(".fancybox-container")
+                .shouldBe(Condition.visible, java.time.Duration.ofSeconds(10))
+                .shouldHave(Condition.cssClass("fancybox-is-open"));
+        return this;
+    }
+
+    @Step("Закрыть лайтбокс (кнопка visibility=hidden → JS-клик)")
+    public ProductPage closeGalleryLightbox() {
+        executeJavaScript("var b=document.querySelector('button.fancybox-button--close')||document.querySelector('.fancybox-button--close'); if(b){b.click();}");
+        return this;
+    }
+
+    @Step("Лайтбокс закрыт: контейнер удалён из DOM")
+    public ProductPage galleryLightboxShouldBeClosed() {
+        $(".fancybox-container").shouldNot(Condition.exist, java.time.Duration.ofSeconds(10));
+        return this;
+    }
 }
